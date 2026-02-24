@@ -1,71 +1,113 @@
 import React from "react";
-import { prisma } from "../lib/Prisma";
+import { prisma } from "../../lib/Prisma";
 import { staff } from "../generated/prisma/browser";
 import Link from "next/link";
 import deleteStaff from "../actions/DeleteStaff";
 import DeleteUserBtn from "../ui/DeleteUserBtn";
-import BackButton from "../components/BackButton";
+import PageHeader from "../components/PageHeader";
+import Section from "../components/Section";
+import Card from "../components/Card";
+import { Users, UserPlus, FileEdit, Eye, Mail, Phone, Hash } from "lucide-react";
+import { requireUser } from "@/lib/session";
 
 async function Staff() {
+  const session = await requireUser();
+  const role = session.role;
+  const isAdminOrConvener = role === 'admin' || role === 'meeting_convener';
+
   const data = await prisma.staff.findMany();
 
   return (
-    <>
+    <div className="bg-pattern min-h-screen pb-12">
+      <PageHeader
+        title="Staff Management"
+        description="View and manage organization personnel records."
+        icon={Users}
+        backHref="/"
+        action={isAdminOrConvener ? {
+          href: "/staff/add",
+          label: "Onboard Staff",
+          icon: UserPlus
+        } : undefined}
+      />
 
-      <div className="flex justify-between items-center mt-10 mb-4">
-        <div>
-          <BackButton href="/" />
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mt-2">Staff Management</h1>
-        </div>
-        <Link
-          href="/staff/add"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Add New Staff
-        </Link>
-      </div>
-
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">UserID</th>
-              <th scope="col" className="px-6 py-3">User Name</th>
-              <th scope="col" className="px-6 py-3">Mobile No</th>
-              <th scope="col" className="px-6 py-3">Email</th>
-              <th scope="col" className="px-6 py-3">Detail</th>
-              <th scope="col" className="px-6 py-3">Edit</th>
-              <th scope="col" className="px-6 py-3">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((u: staff) => (
-              <tr key={u.StaffID} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {u.StaffID}
-                </td>
-                <td className="px-6 py-4">{u.StaffName}</td>
-                <td className="px-6 py-4">{u.MobileNo}</td>
-                <td className="px-6 py-4">{u.EmailAddress}</td>
-                <td className="px-6 py-4">
-                  <Link href={`/staff/${u.StaffID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Detail
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <Link href={`/staff/edit/${u.StaffID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Edit
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <DeleteUserBtn id={u.StaffID} deleteFn={deleteStaff} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+      <Section>
+        <Card noPadding>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Hash size={14} /> ID</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Users size={14} /> Name</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Phone size={14} /> Contact</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Mail size={14} /> Email</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                {data.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-8 py-12 text-center text-slate-500 dark:text-slate-400 font-medium">
+                      No staff members found in the repository.
+                    </td>
+                  </tr>
+                ) : (
+                  data.map((u: staff) => (
+                    <tr key={u.StaffID} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                      <td className="px-8 py-5">
+                        <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400">
+                          {u.StaffID}
+                        </span>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="font-bold text-slate-900 dark:text-white">{u.StaffName}</div>
+                      </td>
+                      <td className="px-8 py-5 font-medium text-slate-600 dark:text-slate-400">
+                        {u.MobileNo || "—"}
+                      </td>
+                      <td className="px-8 py-5 font-medium text-slate-600 dark:text-slate-400 text-sm">
+                        {u.EmailAddress}
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link
+                            href={`/staff/${u.StaffID}`}
+                            title="View Details"
+                            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm"
+                          >
+                            <Eye size={18} />
+                          </Link>
+                          {isAdminOrConvener && (
+                            <>
+                              <Link
+                                href={`/staff/edit/${u.StaffID}`}
+                                title="Edit Record"
+                                className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all shadow-sm"
+                              >
+                                <FileEdit size={18} />
+                              </Link>
+                              <DeleteUserBtn id={u.StaffID} deleteFn={deleteStaff} />
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </Section>
+    </div>
   );
 }
 

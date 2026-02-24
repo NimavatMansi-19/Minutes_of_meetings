@@ -1,9 +1,21 @@
-import { prisma } from "@/app/lib/Prisma";
+import { prisma } from "@/lib/Prisma";
 import React from "react";
 import { updateMeetingMember } from "@/app/actions/updateMeetingMember";
-import BackButton from "@/app/components/BackButton";
+import PageHeader from "@/app/components/PageHeader";
+import Section from "@/app/components/Section";
+import Card from "@/app/components/Card";
+import { UserPlus, User, MessageSquare, CheckCircle, Save, Calendar, FileEdit } from "lucide-react";
+import { requireUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID: string }> }) {
+    const session = await requireUser();
+    const role = session.role;
+
+    if (role !== 'admin' && role !== 'meeting_convener') {
+        redirect("/");
+    }
+
     const { MeetingMemberID } = await params;
     const data = await prisma.meetingmember.findFirst({
         where: {
@@ -11,78 +23,111 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
         },
     });
 
+    if (!data) {
+        redirect("/meetingmember");
+    }
+
     return (
-        <div className="flex justify-center mt-10">
-            <div className="w-full max-w-lg">
-                <BackButton href="/meetingmember" className="mb-2" />
-                <form action={updateMeetingMember} className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full border border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Edit Meeting Member</h2>
-                    <input
-                        type="hidden"
-                        name="MeetingMemberID"
-                        defaultValue={data?.MeetingMemberID?.toString() ?? ""}
-                    />
-                    <table className="w-full">
-                        <tbody>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Meeting ID</td>
-                                <td className="py-3">
+        <div className="bg-pattern min-h-screen pb-12">
+            <PageHeader
+                title="Modify Assignment"
+                description={`Updating membership record #${MeetingMemberID} for governance synchronization.`}
+                icon={FileEdit}
+                backHref="/meetingmember"
+            />
+
+            <Section>
+                <div className="max-w-2xl mx-auto">
+                    <Card>
+                        <form action={updateMeetingMember} className="space-y-8">
+                            <input
+                                type="hidden"
+                                name="MeetingMemberID"
+                                defaultValue={data.MeetingMemberID.toString()}
+                            />
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Meeting ID Input */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <Calendar size={16} className="text-indigo-500" />
+                                        Session ID
+                                    </label>
                                     <input
                                         type="number"
                                         name="MeetingID"
-                                        defaultValue={data?.MeetingID?.toString() ?? ""}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        defaultValue={data.MeetingID.toString()}
+                                        className="input-field"
                                         required
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Staff ID</td>
-                                <td className="py-3">
+                                </div>
+
+                                {/* Staff ID Input */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <User size={16} className="text-indigo-500" />
+                                        Personnel ID
+                                    </label>
                                     <input
                                         type="number"
                                         name="StaffID"
-                                        defaultValue={data?.StaffID?.toString() ?? ""}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        defaultValue={data.StaffID.toString()}
+                                        className="input-field"
                                         required
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Remarks</td>
-                                <td className="py-3">
+                                </div>
+
+                                {/* Remarks Input */}
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <MessageSquare size={16} className="text-indigo-500" />
+                                        Assignment Remarks
+                                    </label>
                                     <input
                                         type="text"
                                         name="Remarks"
-                                        defaultValue={data?.Remarks ?? ""}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        defaultValue={data.Remarks || ""}
+                                        placeholder="Optional notes regarding this assignment..."
+                                        className="input-field"
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Is Present</td>
-                                <td className="py-3">
-                                    <input
-                                        type="checkbox"
-                                        name="IsPresent"
-                                        defaultChecked={data?.IsPresent ?? false}
-                                        className="w-6 h-6 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={2} className="pt-6 text-center">
-                                    <input
-                                        type="submit"
-                                        value="Update Member"
-                                        className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out cursor-pointer"
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+                                </div>
+
+                                {/* Attendance Checkbox */}
+                                <div className="md:col-span-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 group transition-all hover:border-emerald-200 dark:hover:border-emerald-900/30">
+                                    <label className="flex items-center gap-4 cursor-pointer">
+                                        <div className="relative">
+                                            <input
+                                                type="checkbox"
+                                                name="IsPresent"
+                                                defaultChecked={data.IsPresent ?? false}
+                                                className="peer sr-only"
+                                            />
+                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                                <CheckCircle size={16} className="text-emerald-500" />
+                                                Confirm Attendance
+                                            </p>
+                                            <p className="text-xs text-slate-500">Toggling this will update the member's presence status for this session.</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                                <button
+                                    type="submit"
+                                    className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-indigo-500/20"
+                                >
+                                    <Save size={20} />
+                                    Commit Record Updates
+                                </button>
+                            </div>
+                        </form>
+                    </Card>
+                </div>
+            </Section>
         </div>
     );
 }

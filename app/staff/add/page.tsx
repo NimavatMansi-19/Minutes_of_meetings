@@ -1,73 +1,112 @@
 import { saveUser } from "@/app/actions/saveUser";
 import React from "react";
-import BackButton from "../../components/BackButton";
+import PageHeader from "../../components/PageHeader";
+import Section from "../../components/Section";
+import Card from "../../components/Card";
+import { UserPlus, User, Mail, Phone, MessageSquare, Save } from "lucide-react";
+import { requireUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 
-function AddUser() {
+async function AddUser() {
+  const session = await requireUser();
+  const role = session.role;
+  if (role !== 'admin' && role !== 'meeting_convener') {
+    redirect("/");
+  }
+
   return (
-    <div className="flex justify-center mt-10">
-      <div className="w-full max-w-lg">
-        <BackButton href="/staff" className="mb-2" />
-        <form action={saveUser} className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full border border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Add New Staff</h2>
-          <table className="w-full">
-            <tbody>
-              <tr>
-                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Staff Name</td>
-                <td className="py-3">
+    <div className="bg-pattern min-h-screen pb-12">
+      <PageHeader
+        title="Staff Onboarding"
+        description="Register a new personnel member into the organization repository."
+        icon={UserPlus}
+        backHref="/staff"
+      />
+
+      <Section>
+        <div className="max-w-3xl mx-auto">
+          <Card>
+            <form action={saveUser} className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Name Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <User size={16} className="text-indigo-500" />
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     name="staffname"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Enter staff full name"
+                    className="input-field"
                     required
                   />
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Email</td>
-                <td className="py-3">
+                </div>
+
+                {/* Email Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Mail size={16} className="text-indigo-500" />
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     name="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="official@company.com"
+                    className="input-field"
                     required
                   />
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Mobile</td>
-                <td className="py-3">
+                </div>
+
+                {/* Mobile Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Phone size={16} className="text-indigo-500" />
+                    Mobile Number
+                  </label>
                   <input
                     type="text"
                     name="Mobile"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="+1 (555) 000-0000"
+                    className="input-field"
                     required
                   />
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Remark</td>
-                <td className="py-3">
+                </div>
+
+                {/* Remark Input */}
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <MessageSquare size={16} className="text-indigo-500" />
+                    Administrative Remarks
+                  </label>
                   <input
                     type="text"
                     name="remark"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Optional notes..."
+                    className="input-field"
                   />
-                </td>
-              </tr>
+                </div>
+              </div>
 
-              <tr>
-                <td colSpan={2} className="pt-6 text-center">
-                  <input
-                    type="submit"
-                    value="Add Staff Member"
-                    className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out cursor-pointer"
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-      </div>
+              <div className="pt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                <button
+                  type="reset"
+                  className="px-6 py-2.5 rounded-xl font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                >
+                  Clear Form
+                </button>
+                <button
+                  type="submit"
+                  className="btn-primary flex items-center gap-2 px-8"
+                >
+                  <Save size={18} />
+                  Authorize & Add Staff
+                </button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      </Section>
     </div>
   );
 }

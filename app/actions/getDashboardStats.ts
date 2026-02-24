@@ -1,14 +1,28 @@
 "use server";
 
-import { prisma } from "@/app/lib/Prisma";
+import { prisma } from "@/lib/Prisma";
+import { getCurrentUser } from "@/lib/session";
 
 export async function getDashboardStats() {
+    const user = await getCurrentUser();
+
+    let meetingFilter: any = {};
+
+    // Conveners can only see meetings they created
+    if (user && user.sys_role === 'meeting_convener') {
+        meetingFilter = { CreatedBy: user.StaffID };
+    }
+
+    // Staff and Admin see all (Staff limitations are on UI/Roles, checking requirement "View meetings they created" applies specifically to Convener)
+    // "if staff then only one" was about tables visible on login, handled in dashboard page.
+
     const [totalStaff, totalMeetings, totalMembers, meetingsBase] = await Promise.all([
         prisma.staff.count(),
-        prisma.meetings.count(),
+        prisma.meetings.count({ where: meetingFilter }),
         prisma.meetingmember.count(),
         prisma.meetings.findMany({
             where: {
+                ...meetingFilter,
                 MeetingDate: {
                     gte: new Date(),
                 },

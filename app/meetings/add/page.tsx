@@ -1,80 +1,119 @@
 import { saveMeeting } from "@/app/actions/saveMeeting";
 import React from "react";
-import { prisma } from "@/app/lib/Prisma";
-import BackButton from "../../components/BackButton";
+import { prisma } from "@/lib/Prisma";
+import PageHeader from "../../components/PageHeader";
+import Section from "../../components/Section";
+import Card from "../../components/Card";
+import { Calendar, Clock, FileText, Link as LinkIcon, Save, Type } from "lucide-react";
+import { requireUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 async function AddMeeting() {
+    const session = await requireUser();
+    const role = session.role;
+
+    if (role !== 'admin' && role !== 'meeting_convener') {
+        redirect("/");
+    }
+
     const meetingTypes = await prisma.meetingtype.findMany();
 
     return (
-        <div className="flex justify-center mt-10">
-            <div className="w-full max-w-lg">
-                <BackButton href="/meetings" className="mb-2" />
-                <form action={saveMeeting} className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full border border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Schedule Meeting</h2>
-                    <table className="w-full">
-                        <tbody>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Meeting Date</td>
-                                <td className="py-3">
+        <div className="bg-pattern min-h-screen pb-12">
+            <PageHeader
+                title="Schedule Meeting"
+                description="Organize a new governance session and define its parameters."
+                icon={Calendar}
+                backHref="/meetings"
+            />
+
+            <Section>
+                <div className="max-w-3xl mx-auto">
+                    <Card>
+                        <form action={saveMeeting} className="space-y-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {/* Date Input */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <Clock size={16} className="text-indigo-500" />
+                                        Meeting Schedule
+                                    </label>
                                     <input
                                         type="datetime-local"
                                         name="MeetingDate"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="input-field"
                                         required
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Meeting Type</td>
-                                <td className="py-3">
+                                </div>
+
+                                {/* Type Input */}
+                                <div className="space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <Type size={16} className="text-indigo-500" />
+                                        Classification
+                                    </label>
                                     <select
                                         name="MeetingTypeID"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="input-field appearance-none cursor-pointer"
                                         required
                                     >
-                                        <option value="">Select Type</option>
+                                        <option value="">Select Meeting Classification</option>
                                         {meetingTypes.map((type) => (
                                             <option key={type.MeetingTypeID} value={type.MeetingTypeID}>
                                                 {type.MeetingTypeName}
                                             </option>
                                         ))}
                                     </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Description</td>
-                                <td className="py-3">
+                                </div>
+
+                                {/* Description Input */}
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <FileText size={16} className="text-indigo-500" />
+                                        Agenda Description
+                                    </label>
                                     <input
                                         type="text"
                                         name="MeetingDescription"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Briefly state the primary focus of this meeting"
+                                        className="input-field"
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-3 pr-4 font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Document Path</td>
-                                <td className="py-3">
+                                </div>
+
+                                {/* Document Path Input */}
+                                <div className="md:col-span-2 space-y-2">
+                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <LinkIcon size={16} className="text-indigo-500" />
+                                        Resource Path / Repository Link
+                                    </label>
                                     <input
                                         type="text"
                                         name="DocumentPath"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="URL or path to related session documents"
+                                        className="input-field"
                                     />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={2} className="pt-6 text-center">
-                                    <input
-                                        type="submit"
-                                        value="Save Meeting"
-                                        className="w-full px-6 py-2.5 bg-blue-600 text-white font-medium text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out cursor-pointer"
-                                    />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+                                </div>
+                            </div>
+
+                            <div className="pt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                                <button
+                                    type="reset"
+                                    className="px-6 py-2.5 rounded-xl font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                                >
+                                    Reset Details
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="btn-primary flex items-center gap-2 px-8"
+                                >
+                                    <Save size={18} />
+                                    Publish Schedule
+                                </button>
+                            </div>
+                        </form>
+                    </Card>
+                </div>
+            </Section>
         </div>
     );
 }

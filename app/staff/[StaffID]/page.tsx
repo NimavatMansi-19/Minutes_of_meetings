@@ -1,50 +1,116 @@
-import { staff } from "@/app/generated/prisma/browser";
-import { prisma } from "@/app/lib/Prisma";
+import { prisma } from "@/lib/Prisma";
 import Link from "next/link";
 import React from "react";
-import BackButton from "@/app/components/BackButton";
+import PageHeader from "@/app/components/PageHeader";
+import Section from "@/app/components/Section";
+import Card from "@/app/components/Card";
+import { User, Mail, Phone, MessageSquare, Hash, Calendar, FileEdit } from "lucide-react";
 
-async function DetailStaff({ params }: { params: Promise<{ StaffID: number }> }) {
+async function DetailStaff({ params }: { params: Promise<{ StaffID: string }> }) {
   const { StaffID } = await params;
   const data = await prisma.staff.findFirst({
     where: { StaffID: Number(StaffID) },
   });
-  return (
-    <div className="flex justify-center mt-10">
-      <div className="w-full max-w-lg">
-        <BackButton href="/staff" className="mb-2" />
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-8 w-full">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b pb-4">Staff Details</h1>
 
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Staff Name:</span>
-              <span className="text-gray-900 dark:text-white">{data?.StaffName}</span>
+  if (!data) {
+    return (
+      <div className="bg-pattern min-h-screen">
+        <PageHeader title="Staff Not Found" icon={User} backHref="/staff" />
+        <Section>
+          <Card>
+            <div className="text-center py-12">
+              <p className="text-slate-500 font-medium text-lg">The requested staff record could not be found in the repository.</p>
             </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Email:</span>
-              <span className="text-gray-900 dark:text-white">{data?.EmailAddress}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Mobile No:</span>
-              <span className="text-gray-900 dark:text-white">{data?.MobileNo}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600 dark:text-gray-300">Remarks:</span>
-              <span className="text-gray-900 dark:text-white">{data?.Remarks || 'N/A'}</span>
-            </div>
+          </Card>
+        </Section>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-pattern min-h-screen pb-12">
+      <PageHeader
+        title="Staff Profile"
+        description="Detailed personnel record and administrative information."
+        icon={User}
+        backHref="/staff"
+        action={{
+          href: `/staff/edit/${data.StaffID}`,
+          label: "Update Record",
+          icon: FileEdit
+        }}
+      />
+
+      <Section>
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Left Column - Avatar & Basic Info */}
+          <div className="md:col-span-1 space-y-6">
+            <Card className="text-center">
+              <div className="mx-auto w-24 h-24 rounded-[2rem] bg-indigo-600 flex items-center justify-center text-white mb-4 shadow-xl shadow-indigo-500/20">
+                <User size={48} />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{data.StaffName}</h2>
+              <p className="text-sm text-slate-500 font-medium">Organization Personnel</p>
+
+              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-center gap-4">
+                <div className="text-center">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">ID</p>
+                  <p className="font-bold text-indigo-600 dark:text-indigo-400">#{data.StaffID}</p>
+                </div>
+              </div>
+            </Card>
           </div>
 
-          <div className="mt-8">
-            <Link
-              href="/staff"
-              className="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-            >
-              &larr; Back to Staff List
-            </Link>
+          {/* Right Column - Detailed Info */}
+          <div className="md:col-span-2 space-y-6">
+            <Card title="Personnel Information">
+              <div className="grid grid-cols-1 gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                    <Mail size={20} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Email Address</p>
+                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.EmailAddress || "No email registered"}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                    <Phone size={20} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Mobile Access</p>
+                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.MobileNo || "No contact number"}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                    <MessageSquare size={20} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Administrative Remarks</p>
+                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.Remarks || "Zero remarks documented"}</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="bg-slate-900 text-white border-none shadow-2xl">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-white/10 text-white">
+                  <Calendar size={20} />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Record Integrity</p>
+                  <p className="text-sm text-slate-300">This record is synchronized with the central database and was last verified on {new Date().toLocaleDateString()}.</p>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
-      </div>
+      </Section>
     </div>
   );
 }

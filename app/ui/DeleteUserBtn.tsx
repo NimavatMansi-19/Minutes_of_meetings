@@ -4,8 +4,12 @@ export default function DeleteUserBtn(props: any) {
     <>
       <button
         className="btn btn-danger"
-        onClick={() => {
-          props.deleteFn(props.id);
+        onClick={async () => {
+          try {
+            await props.deleteFn(props.id);
+          } catch (e: any) {
+            alert(e.message);
+          }
         }}
       >
         Delete

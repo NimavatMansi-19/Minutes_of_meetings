@@ -1,7 +1,9 @@
-import { prisma } from "@/app/lib/Prisma";
-import Link from "next/link";
+import { prisma } from "@/lib/Prisma";
 import React from "react";
-import BackButton from "@/app/components/BackButton";
+import PageHeader from "@/app/components/PageHeader";
+import Section from "@/app/components/Section";
+import Card from "@/app/components/Card";
+import { Layers, Type, MessageSquare, Hash, FileEdit, Info } from "lucide-react";
 
 async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: string }> }) {
     const { MeetingTypeID } = await params;
@@ -9,38 +11,92 @@ async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: 
         where: { MeetingTypeID: Number(MeetingTypeID) },
     });
 
+    if (!data) {
+        return (
+            <div className="bg-pattern min-h-screen">
+                <PageHeader title="Schema Not Found" icon={Layers} backHref="/meetingtype" />
+                <Section>
+                    <Card>
+                        <div className="text-center py-12">
+                            <p className="text-slate-500 font-medium text-lg">The requested classification schema could not be identified.</p>
+                        </div>
+                    </Card>
+                </Section>
+            </div>
+        );
+    }
+
     return (
-        <div className="flex justify-center mt-10">
-            <div className="w-full max-w-lg">
-                <BackButton href="/meetingtype" className="mb-2" />
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-8 w-full">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-b pb-4">Type Details</h1>
+        <div className="bg-pattern min-h-screen pb-12">
+            <PageHeader
+                title="Classification Details"
+                description="Regulatory parameters and administrative directives for this meeting category."
+                icon={Layers}
+                backHref="/meetingtype"
+                action={{
+                    href: `/meetingtype/edit/${data.MeetingTypeID}`,
+                    label: "Modify Schema",
+                    icon: FileEdit
+                }}
+            />
 
-                    <div className="space-y-4">
-                        <div className="flex justify-between">
-                            <span className="font-semibold text-gray-600 dark:text-gray-300">Type ID:</span>
-                            <span className="text-gray-900 dark:text-white">{data?.MeetingTypeID}</span>
+            <Section>
+                <div className="max-w-4xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="md:col-span-1">
+                            <Card className="text-center h-full flex flex-col justify-center">
+                                <div className="mx-auto w-20 h-20 rounded-[2rem] bg-indigo-600 flex items-center justify-center text-white mb-4 shadow-xl shadow-indigo-500/20">
+                                    <Type size={32} />
+                                </div>
+                                <h2 className="text-2xl font-black text-indigo-600 dark:text-indigo-400 tracking-tight uppercase">
+                                    {data.MeetingTypeName}
+                                </h2>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Active Classification</p>
+                            </Card>
                         </div>
-                        <div className="flex justify-between">
-                            <span className="font-semibold text-gray-600 dark:text-gray-300">Type Name:</span>
-                            <span className="text-gray-900 dark:text-white">{data?.MeetingTypeName}</span>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="font-semibold text-gray-600 dark:text-gray-300">Remarks:</span>
-                            <span className="text-gray-900 dark:text-white">{data?.Remarks || 'N/A'}</span>
-                        </div>
-                    </div>
 
-                    <div className="mt-8">
-                        <Link
-                            href="/meetingtype"
-                            className="text-white bg-gray-600 hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-                        >
-                            &larr; Back to List
-                        </Link>
+                        <div className="md:col-span-2 space-y-6">
+                            <Card title="Structural Directives">
+                                <div className="space-y-8">
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                                            <Hash size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Index ID</p>
+                                            <p className="text-lg font-bold text-slate-900 dark:text-white">TYPE-{data.MeetingTypeID}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                                            <MessageSquare size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Administrative Remarks</p>
+                                            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                                                {data.Remarks || "No specific administrative directives documented for this classification schema."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Card>
+
+                            <Card className="bg-slate-900 text-white border-none shadow-2xl">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 rounded-2xl bg-white/10 text-white">
+                                        <Info size={20} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">System Integrity</p>
+                                        <p className="text-sm text-slate-300">This schema is locked for active governance synchronization. Manual decommissioning requires administrative override.</p>
+                                    </div>
+                                </div>
+                            </Card>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Section>
         </div>
     );
 }

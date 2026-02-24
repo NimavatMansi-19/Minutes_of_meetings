@@ -1,71 +1,135 @@
 import React from "react";
-import { prisma } from "../lib/Prisma";
-import { meetingmember } from "../generated/prisma/browser";
+import { prisma } from "../../lib/Prisma";
+import { requireUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 import Link from "next/link";
-import deleteUser from "../actions/DeleteUser";
+import deleteMember from "../actions/DeleteUser";
 import DeleteUserBtn from "../ui/DeleteUserBtn";
-import BackButton from "../components/BackButton";
+import PageHeader from "../components/PageHeader";
+import Section from "../components/Section";
+import Card from "../components/Card";
+import { Users, UserPlus, FileEdit, Eye, Hash, MessageSquare, CheckCircle, XCircle } from "lucide-react";
 
 async function MeetingMember() {
-  const data = await prisma.meetingmember.findMany();
+  const session = await requireUser();
+  const role = session.role;
+
+  if (role !== 'admin' && role !== 'meeting_convener') {
+    redirect("/");
+  }
+
+  let where = {};
+  if (role === 'meeting_convener') {
+    const myMeetings = await prisma.meetings.findMany({
+      where: { CreatedBy: session.StaffID },
+      select: { MeetingID: true }
+    });
+    const meetingIds = myMeetings.map((m: any) => m.MeetingID);
+    where = { MeetingID: { in: meetingIds } };
+  }
+
+  const data = await prisma.meetingmember.findMany({
+    where,
+    include: {
+      staff: true,
+      meetings: true
+    }
+  });
 
   return (
-    <>
+    <div className="bg-pattern min-h-screen pb-12">
+      <PageHeader
+        title="Meeting Attendance"
+        description="Track and manage members and their attendance for various meetings."
+        icon={Users}
+        backHref="/"
+        action={{
+          href: "/meetingmember/add",
+          label: "Assign Member",
+          icon: UserPlus
+        }}
+      />
 
-      <div className="flex justify-between items-center mt-10 mb-4">
-        <div>
-          <BackButton href="/" />
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mt-2">Meeting Members</h1>
-        </div>
-        <Link
-          href="/meetingmember/add"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-        >
-          Add New Meeting Member
-        </Link>
-      </div>
-
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3">UserID</th>
-              <th scope="col" className="px-6 py-3">User Name</th>
-              <th scope="col" className="px-6 py-3">Mobile No</th>
-              <th scope="col" className="px-6 py-3">Email</th>
-              <th scope="col" className="px-6 py-3">Detail</th>
-              <th scope="col" className="px-6 py-3">Edit</th>
-              <th scope="col" className="px-6 py-3">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((u: meetingmember) => (
-              <tr key={u.MeetingMemberID} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                  {u.MeetingMemberID}
-                </td>
-                <td className="px-6 py-4">{u.StaffID}</td>
-                <td className="px-6 py-4">{u.Remarks}</td>
-                <td className="px-6 py-4">{u.IsPresent}</td>
-                <td className="px-6 py-4">
-                  <Link href={`/meetingmember/${u.MeetingMemberID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Detail
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <Link href={`/meetingmember/edit/${u.MeetingMemberID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                    Edit
-                  </Link>
-                </td>
-                <td className="px-6 py-4">
-                  <DeleteUserBtn id={u.MeetingMemberID} deleteFn={deleteUser} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+      <Section>
+        <Card noPadding>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Hash size={14} /> ID</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center gap-2"><Users size={14} /> Member Name</div>
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    Meeting Context
+                  </th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-center">Attendance</th>
+                  <th className="px-8 py-5 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/50">
+                {data.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-8 py-12 text-center text-slate-500 dark:text-slate-400 font-medium">
+                      No membership records found.
+                    </td>
+                  </tr>
+                ) : (
+                  data.map((u: any) => (
+                    <tr key={u.MeetingMemberID} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group">
+                      <td className="px-8 py-5">
+                        <span className="inline-flex items-center justify-center h-8 w-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-400">
+                          {u.MeetingMemberID}
+                        </span>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="font-bold text-slate-900 dark:text-white">{u.staff?.StaffName || `Staff #${u.StaffID}`}</div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase">Meeting #{u.MeetingID}</span>
+                          <span className="text-sm text-slate-500 dark:text-zinc-500 line-clamp-1">{u.Remarks || "No remarks"}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-center">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${u.IsPresent
+                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-400'
+                          : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                          }`}>
+                          {u.IsPresent ? <CheckCircle size={12} /> : <XCircle size={12} />}
+                          {u.IsPresent ? 'Present' : 'Absent'}
+                        </span>
+                      </td>
+                      <td className="px-8 py-5">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link
+                            href={`/meetingmember/${u.MeetingMemberID}`}
+                            title="View Details"
+                            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-all shadow-sm"
+                          >
+                            <Eye size={18} />
+                          </Link>
+                          <Link
+                            href={`/meetingmember/edit/${u.MeetingMemberID}`}
+                            title="Edit Assignment"
+                            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all shadow-sm"
+                          >
+                            <FileEdit size={18} />
+                          </Link>
+                          <DeleteUserBtn id={u.MeetingMemberID} deleteFn={deleteMember} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </Section>
+    </div>
   );
 }
 
