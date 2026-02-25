@@ -6,11 +6,11 @@ import { getCurrentUser } from "@/lib/session";
 export async function getDashboardStats() {
     const user = await getCurrentUser();
 
-    let meetingFilter: any = {};
+    let meetingFilter: any = undefined;
 
     // Conveners can only see meetings they created
     if (user && user.sys_role === 'meeting_convener') {
-        meetingFilter = { CreatedBy: user.StaffID };
+        meetingFilter = { CreatedBy: Number(user.StaffID) };
     }
 
     // Staff and Admin see all (Staff limitations are on UI/Roles, checking requirement "View meetings they created" applies specifically to Convener)
@@ -39,7 +39,7 @@ export async function getDashboardStats() {
     const meetingTypes = await prisma.meetingtype.findMany({
         where: {
             MeetingTypeID: {
-                in: typeIds,
+                in: typeIds.length > 0 ? typeIds : [-1],
             },
         },
     });

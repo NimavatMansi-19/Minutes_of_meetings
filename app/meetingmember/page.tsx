@@ -18,23 +18,28 @@ async function MeetingMember() {
     redirect("/");
   }
 
-  let where = {};
-  if (role === 'meeting_convener') {
-    const myMeetings = await prisma.meetings.findMany({
-      where: { CreatedBy: session.StaffID },
-      select: { MeetingID: true }
-    });
-    const meetingIds = myMeetings.map((m: any) => m.MeetingID);
-    where = { MeetingID: { in: meetingIds } };
-  }
-
-  const data = await prisma.meetingmember.findMany({
-    where,
+  let queryOptions: any = {
     include: {
       staff: true,
       meetings: true
     }
-  });
+  };
+
+  if (role === 'meeting_convener') {
+    const myMeetings = await prisma.meetings.findMany({
+      where: { CreatedBy: Number(session.StaffID) || 0 },
+      select: { MeetingID: true }
+    });
+
+    if (myMeetings.length === 0) {
+      queryOptions.where = { MeetingID: -1 };
+    } else {
+      const meetingIds = myMeetings.map((m: any) => m.MeetingID);
+      queryOptions.where = { MeetingID: { in: meetingIds } };
+    }
+  }
+
+  const data = await prisma.meetingmember.findMany(queryOptions);
 
   return (
     <div className="bg-pattern min-h-screen pb-12">
@@ -42,7 +47,7 @@ async function MeetingMember() {
         title="Meeting Attendance"
         description="Track and manage members and their attendance for various meetings."
         icon={Users}
-        backHref="/"
+        backHref="/dashboard"
         action={{
           href: "/meetingmember/add",
           label: "Assign Member",
@@ -85,7 +90,7 @@ async function MeetingMember() {
                         </span>
                       </td>
                       <td className="px-8 py-5">
-                        <div className="font-bold text-slate-900 dark:text-white">{u.staff?.StaffName || `Staff #${u.StaffID}`}</div>
+                        <div className="font-bold text-white">{u.staff?.StaffName || `Staff #${u.StaffID}`}</div>
                       </td>
                       <td className="px-8 py-5">
                         <div className="flex flex-col">
@@ -103,7 +108,7 @@ async function MeetingMember() {
                         </span>
                       </td>
                       <td className="px-8 py-5">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-2 transition-opacity">
                           <Link
                             href={`/meetingmember/${u.MeetingMemberID}`}
                             title="View Details"

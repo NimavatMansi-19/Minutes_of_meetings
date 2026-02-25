@@ -26,7 +26,7 @@ async function MeetingTypeList() {
                 title="Meeting Classifications"
                 description="Define and manage categories of governance sessions within the organization."
                 icon={Layers}
-                backHref="/"
+                backHref="/dashboard"
                 action={{
                     href: "/meetingtype/add",
                     label: "Define Type",
@@ -68,7 +68,7 @@ async function MeetingTypeList() {
                                                 </span>
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="font-bold text-slate-900 dark:text-white uppercase tracking-tight">{item.MeetingTypeName}</div>
+                                                <div className="font-bold text-white uppercase tracking-tight">{item.MeetingTypeName}</div>
                                             </td>
                                             <td className="px-8 py-5">
                                                 <div className="text-sm text-slate-500 dark:text-zinc-500 line-clamp-1 italic max-w-md">
@@ -76,7 +76,7 @@ async function MeetingTypeList() {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-2 transition-opacity">
                                                     <Link
                                                         href={`/meetingtype/${item.MeetingTypeID}`}
                                                         title="View Details"

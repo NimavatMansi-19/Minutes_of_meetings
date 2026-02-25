@@ -1,6 +1,10 @@
-export const saveToken = (token: string) => {
+export const saveToken = (token: string, remember: boolean = false) => {
   localStorage.setItem("token", token);
-  document.cookie = `token=${token}; path=/; max-age=604800; SameSite=Strict`;
+  if (remember) {
+    document.cookie = `token=${token}; path=/; max-age=604800; SameSite=Strict`;
+  } else {
+    document.cookie = `token=${token}; path=/; SameSite=Strict`; // Expires when browser closes
+  }
 };
 
 export const getToken = () => {
@@ -10,7 +14,7 @@ export const getToken = () => {
 
 export const logout = () => {
   localStorage.removeItem("token");
-  document.cookie = "token=; path=/; max-age=0";
+  document.cookie = "token=; path=/; max-age=0; SameSite=Strict";
 };
 
 export const getRoleFromToken = () => {

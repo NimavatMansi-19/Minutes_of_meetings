@@ -14,9 +14,9 @@ async function MeetingList() {
     const role = session.role;
     const isAdminOrConvener = role === 'admin' || role === 'meeting_convener';
 
-    let where = {};
+    let where: any = undefined;
     if (role === 'meeting_convener') {
-        where = { CreatedBy: session.StaffID };
+        where = { CreatedBy: Number(session.StaffID) };
     }
 
     const data = await prisma.meetings.findMany({
@@ -32,7 +32,7 @@ async function MeetingList() {
                 title="Meeting Records"
                 description="Browse and manage all scheduled and historical meetings."
                 icon={Calendar}
-                backHref="/"
+                backHref="/dashboard"
                 action={isAdminOrConvener ? {
                     href: "/meetings/add",
                     label: "Schedule Meeting",
@@ -76,7 +76,7 @@ async function MeetingList() {
                                             </td>
                                             <td className="px-8 py-5">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-slate-900 dark:text-white">
+                                                    <span className="font-bold text-white">
                                                         {new Date(item.MeetingDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                                                     </span>
                                                     <span className="text-xs text-slate-500 dark:text-zinc-500">
@@ -86,8 +86,8 @@ async function MeetingList() {
                                             </td>
                                             <td className="px-8 py-5">
                                                 <div className="flex flex-col">
-                                                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest bg-indigo-50 dark:bg-indigo-900/20 px-2 py-0.5 rounded w-fit mb-1">
-                                                        {item.meetingtype?.MeetingTypeName || `Type ${item.MeetingTypeID}`}
+                                                    <span className="font-bold text-white uppercase tracking-tight">
+                                                        {item.meetingtype?.MeetingTypeName || "General Application"}
                                                     </span>
                                                     <span className="font-medium text-slate-600 dark:text-slate-400 line-clamp-1">
                                                         {item.MeetingDescription || "No description provided"}
@@ -104,7 +104,7 @@ async function MeetingList() {
                                                 </span>
                                             </td>
                                             <td className="px-8 py-5">
-                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <div className="flex items-center justify-end gap-2 transition-opacity">
                                                     <Link
                                                         href={`/meetings/${item.MeetingID}`}
                                                         title="View Details"

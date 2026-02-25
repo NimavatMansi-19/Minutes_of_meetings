@@ -20,10 +20,10 @@ async function Staff() {
   return (
     <div className="bg-pattern min-h-screen pb-12">
       <PageHeader
-        title="Staff Management"
-        description="View and manage organization personnel records."
+        title="Staff Directory"
+        description="Comprehensive directory of all organization staff and personnel."
         icon={Users}
-        backHref="/"
+        backHref="/dashboard"
         action={isAdminOrConvener ? {
           href: "/staff/add",
           label: "Onboard Staff",
@@ -68,7 +68,7 @@ async function Staff() {
                         </span>
                       </td>
                       <td className="px-8 py-5">
-                        <div className="font-bold text-slate-900 dark:text-white">{u.StaffName}</div>
+                        <div className="font-bold text-white">{u.StaffName}</div>
                       </td>
                       <td className="px-8 py-5 font-medium text-slate-600 dark:text-slate-400">
                         {u.MobileNo || "—"}
@@ -77,7 +77,7 @@ async function Staff() {
                         {u.EmailAddress}
                       </td>
                       <td className="px-8 py-5">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center justify-end gap-2 transition-opacity">
                           <Link
                             href={`/staff/${u.StaffID}`}
                             title="View Details"
