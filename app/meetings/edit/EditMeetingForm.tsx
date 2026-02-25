@@ -97,15 +97,19 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
                     <div className="md:col-span-2 space-y-2">
                         <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                             <LinkIcon size={16} className="text-indigo-500" />
-                            Resource Repository
+                            Resource File
+                            {meeting?.DocumentPath && (
+                                <span className="ml-2 text-xs text-slate-500 font-normal">
+                                    (Currently: <a href={meeting.DocumentPath} target="_blank" rel="noopener noreferrer" className="text-indigo-500 underline">View File</a>)
+                                </span>
+                            )}
                         </label>
                         <input
-                            type="text"
+                            type="file"
                             name="DocumentPath"
-                            defaultValue={meeting?.DocumentPath ?? ""}
-                            placeholder="URL or file system path"
-                            className="input-field"
+                            className="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer p-2"
                         />
+                        <p className="text-xs text-gray-500 mt-1">Leave empty to keep your existing document.</p>
                     </div>
 
                     {/* Status Checkbox */}

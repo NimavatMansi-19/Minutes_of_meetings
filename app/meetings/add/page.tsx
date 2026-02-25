@@ -80,17 +80,15 @@ async function AddMeeting() {
                                     />
                                 </div>
 
-                                {/* Document Path Input */}
                                 <div className="md:col-span-2 space-y-2">
                                     <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <LinkIcon size={16} className="text-indigo-500" />
-                                        Resource Path / Repository Link
+                                        Resource File
                                     </label>
                                     <input
-                                        type="text"
+                                        type="file"
                                         name="DocumentPath"
-                                        placeholder="URL or path to related session documents"
-                                        className="input-field"
+                                        className="input-field file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer p-2"
                                     />
                                 </div>
                             </div>
