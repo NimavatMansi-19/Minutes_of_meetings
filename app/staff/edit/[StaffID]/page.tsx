@@ -48,7 +48,7 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Name Input */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                     <User size={16} className="text-indigo-500" />
                     Full Legal Name
                   </label>
@@ -64,14 +64,14 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
 
                 {/* Email Input */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                     <Mail size={16} className="text-indigo-500" />
                     Corporate Email
                   </label>
                   <input
                     type="email"
                     name="email"
-                    defaultValue={data.EmailAddress}
+                    defaultValue={data.EmailAddress || ""}
                     placeholder="email@organization.com"
                     className="input-field"
                     required
@@ -80,14 +80,14 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
 
                 {/* Mobile Input */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                     <Phone size={16} className="text-indigo-500" />
                     Contact Number
                   </label>
                   <input
                     type="text"
                     name="Mobile"
-                    defaultValue={data.MobileNo}
+                    defaultValue={data.MobileNo || ""}
                     placeholder="+1 (555) 000-0000"
                     className="input-field"
                     required
@@ -96,7 +96,7 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
 
                 {/* Remark Input */}
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                  <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                     <MessageSquare size={16} className="text-indigo-500" />
                     Personnel Remarks
                   </label>
@@ -110,7 +110,7 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+              <div className="pt-6 border-t border-slate-200">
                 <button
                   type="submit"
                   className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 shadow-xl shadow-indigo-500/20 active:scale-[0.98] transition-all"

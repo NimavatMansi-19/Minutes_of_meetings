@@ -21,7 +21,7 @@ async function DetailMeeting({ params }: { params: Promise<{ MeetingID: string }
                 <Section>
                     <Card>
                         <div className="text-center py-12">
-                            <p className="text-slate-500 font-medium text-lg">The requested meeting record could not be retrieved from the repository.</p>
+                            <p className="text-gray-600 font-medium text-lg">The requested meeting record could not be retrieved from the repository.</p>
                         </div>
                     </Card>
                 </Section>
@@ -48,36 +48,36 @@ async function DetailMeeting({ params }: { params: Promise<{ MeetingID: string }
                     {/* Status & Quick Info */}
                     <div className="md:col-span-1 space-y-6">
                         <Card className="text-center">
-                            <div className={`mx-auto w-20 h-20 rounded-[2rem] flex items-center justify-center mb-4 shadow-xl ${data.IsCancelled ? 'bg-rose-100 text-rose-600 shadow-rose-500/10' : 'bg-green-100 text-green-600 shadow-green-500/10'}`}>
+                            <div className={`mx-auto w-20 h-20 rounded-[2rem] flex items-center justify-center mb-4 shadow-xl ${data.IsCancelled ? 'bg-amber-100 text-amber-700 shadow-amber-50' : 'bg-green-100 text-green-600 shadow-green-500/10'}`}>
                                 {data.IsCancelled ? <AlertCircle size={40} /> : <CheckCircle size={40} />}
                             </div>
-                            <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">
+                            <h2 className="text-xl font-bold text-black  uppercase tracking-tight">
                                 {data.IsCancelled ? 'Cancelled' : 'Active'}
                             </h2>
-                            <p className="text-sm text-slate-500 font-medium tracking-wide">Governance Status</p>
+                            <p className="text-sm text-gray-600 font-medium tracking-wide">Governance Status</p>
 
-                            <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 space-y-4">
+                            <div className="mt-6 pt-6 border-t border-slate-200 space-y-4">
                                 <div className="text-center">
-                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Session ID</p>
+                                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest">Session ID</p>
                                     <p className="font-bold text-indigo-600">PRO-{data.MeetingID}</p>
                                 </div>
                             </div>
                         </Card>
 
                         {data.IsCancelled && (
-                            <Card className="bg-rose-50 dark:bg-rose-900/10 border-rose-100 dark:border-rose-900/30">
+                            <Card className="bg-amber-50  border-amber-100 ">
                                 <div className="flex flex-col gap-2">
-                                    <p className="text-xs font-bold text-rose-500 uppercase tracking-widest">Revocation Logs</p>
+                                    <p className="text-xs font-bold text-amber-600 uppercase tracking-widest">Revocation Logs</p>
                                     <div className="space-y-3">
                                         <div>
-                                            <p className="text-xs font-bold text-slate-400">Timestamp</p>
-                                            <p className="text-sm font-medium text-rose-700 dark:text-rose-300">
+                                            <p className="text-xs font-bold text-gray-700">Timestamp</p>
+                                            <p className="text-sm font-medium text-rose-700 ">
                                                 {data.CancellationDateTime ? new Date(data.CancellationDateTime).toLocaleString() : 'Not documented'}
                                             </p>
                                         </div>
                                         <div>
-                                            <p className="text-xs font-bold text-slate-400">Reasoning</p>
-                                            <p className="text-sm text-slate-700 dark:text-slate-400 italic">
+                                            <p className="text-xs font-bold text-gray-700">Reasoning</p>
+                                            <p className="text-sm text-gray-800  italic">
                                                 "{data.CancellationReason || 'No descriptive reasoning provided.'}"
                                             </p>
                                         </div>
@@ -92,54 +92,54 @@ async function DetailMeeting({ params }: { params: Promise<{ MeetingID: string }
                         <Card title="Session Framework">
                             <div className="grid grid-cols-1 gap-8">
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                                    <div className="p-3 rounded-2xl bg-indigo-50  text-indigo-600 text-indigo-400">
                                         <Clock size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Scheduled Timeline</p>
-                                        <p className="text-lg font-bold text-slate-900 dark:text-white">
+                                        <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Scheduled Timeline</p>
+                                        <p className="text-lg font-bold text-black ">
                                             {new Date(data.MeetingDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                                         </p>
-                                        <p className="text-indigo-600 dark:text-indigo-400 font-medium">
+                                        <p className="text-indigo-600 text-indigo-400 font-medium">
                                             {new Date(data.MeetingDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                                    <div className="p-3 rounded-2xl bg-indigo-50  text-indigo-600 text-indigo-400">
                                         <Info size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Classification</p>
-                                        <p className="text-lg font-medium text-slate-900 dark:text-white">
+                                        <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Classification</p>
+                                        <p className="text-lg font-medium text-black ">
                                             {data.meetingtype?.MeetingTypeName || "Unclassified Session"}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                                    <div className="p-3 rounded-2xl bg-indigo-50  text-indigo-600 text-indigo-400">
                                         <FileText size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Agenda Description</p>
-                                        <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed">
+                                        <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Agenda Description</p>
+                                        <p className="text-lg text-gray-800  leading-relaxed">
                                             {data.MeetingDescription || "Zero descriptive data provided for this session."}
                                         </p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-start gap-4">
-                                    <div className="p-3 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400">
+                                    <div className="p-3 rounded-2xl bg-indigo-50  text-indigo-600 text-indigo-400">
                                         <LinkIcon size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Resource Repository</p>
+                                        <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Resource Repository</p>
                                         {data.DocumentPath ? (
-                                            <p className="text-lg font-mono text-indigo-600 dark:text-indigo-400 break-all">{data.DocumentPath}</p>
+                                            <p className="text-lg font-mono text-indigo-600 text-indigo-400 break-all">{data.DocumentPath}</p>
                                         ) : (
-                                            <p className="text-lg text-slate-400 italic">No external resources mapped.</p>
+                                            <p className="text-lg text-gray-700 italic">No external resources mapped.</p>
                                         )}
                                     </div>
                                 </div>

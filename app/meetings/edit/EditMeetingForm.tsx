@@ -44,7 +44,7 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Date Input */}
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                             <Clock size={16} className="text-indigo-500" />
                             Meeting Schedule
                         </label>
@@ -59,7 +59,7 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
 
                     {/* Type Input */}
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                             <Type size={16} className="text-indigo-500" />
                             Classification
                         </label>
@@ -80,7 +80,7 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
 
                     {/* Description Input */}
                     <div className="md:col-span-2 space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                             <FileText size={16} className="text-indigo-500" />
                             Agenda Description
                         </label>
@@ -95,7 +95,7 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
 
                     {/* Document Path Input */}
                     <div className="md:col-span-2 space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                             <LinkIcon size={16} className="text-indigo-500" />
                             Resource Repository
                         </label>
@@ -109,7 +109,7 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
                     </div>
 
                     {/* Status Checkbox */}
-                    <div className="md:col-span-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 group transition-all hover:border-rose-200 dark:hover:border-rose-900/30">
+                    <div className="md:col-span-2 p-4 rounded-2xl bg-white border border-slate-200 group transition-all hover:border-amber-600/50">
                         <label className="flex items-center gap-4 cursor-pointer">
                             <div className="relative">
                                 <input
@@ -118,20 +118,20 @@ export default function EditMeetingForm({ meeting, meetingTypes }: Props) {
                                     defaultChecked={meeting?.IsCancelled ?? false}
                                     className="peer sr-only"
                                 />
-                                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 dark:peer-focus:ring-indigo-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-rose-500"></div>
+                                <div className="w-11 h-6 bg-slate-200/50 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 :ring-indigo-800 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-amber-100 text-amber-900 font-bold"></div>
                             </div>
                             <div>
-                                <p className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                    <AlertCircle size={16} className="text-rose-500" />
+                                <p className="font-bold text-black  flex items-center gap-2">
+                                    <AlertCircle size={16} className="text-amber-600" />
                                     Mark as Cancelled
                                 </p>
-                                <p className="text-xs text-slate-500">Toggling this will flag the session as inactive across all dashboards.</p>
+                                <p className="text-xs text-gray-600">Toggling this will flag the session as inactive across all dashboards.</p>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                <div className="pt-6 border-t border-slate-200">
                     <button
                         type="submit"
                         disabled={isSubmitting}

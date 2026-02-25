@@ -19,7 +19,7 @@ async function DetailStaff({ params }: { params: Promise<{ StaffID: string }> })
         <Section>
           <Card>
             <div className="text-center py-12">
-              <p className="text-slate-500 font-medium text-lg">The requested staff record could not be found in the repository.</p>
+              <p className="text-gray-600 font-medium text-lg">The requested staff record could not be found in the repository.</p>
             </div>
           </Card>
         </Section>
@@ -49,13 +49,13 @@ async function DetailStaff({ params }: { params: Promise<{ StaffID: string }> })
               <div className="mx-auto w-24 h-24 rounded-[2rem] bg-indigo-600 flex items-center justify-center text-white mb-4 shadow-xl shadow-indigo-500/20">
                 <User size={48} />
               </div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white line-clamp-1">{data.StaffName}</h2>
-              <p className="text-sm text-slate-500 font-medium">Organization Personnel</p>
+              <h2 className="text-xl font-bold text-black  line-clamp-1">{data.StaffName}</h2>
+              <p className="text-sm text-gray-600 font-medium">Organization Personnel</p>
 
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 flex justify-center gap-4">
+              <div className="mt-6 pt-6 border-t border-slate-200 flex justify-center gap-4">
                 <div className="text-center">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">ID</p>
-                  <p className="font-bold text-indigo-600 dark:text-indigo-400">#{data.StaffID}</p>
+                  <p className="text-xs font-bold text-gray-700 uppercase tracking-widest">ID</p>
+                  <p className="font-bold text-indigo-600 text-indigo-400">#{data.StaffID}</p>
                 </div>
               </div>
             </Card>
@@ -66,44 +66,44 @@ async function DetailStaff({ params }: { params: Promise<{ StaffID: string }> })
             <Card title="Personnel Information">
               <div className="grid grid-cols-1 gap-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                     <Mail size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Email Address</p>
-                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.EmailAddress || "No email registered"}</p>
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Email Address</p>
+                    <p className="text-lg font-medium text-black ">{data.EmailAddress || "No email registered"}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                     <Phone size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Mobile Access</p>
-                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.MobileNo || "No contact number"}</p>
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Mobile Access</p>
+                    <p className="text-lg font-medium text-black ">{data.MobileNo || "No contact number"}</p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                     <MessageSquare size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Administrative Remarks</p>
-                    <p className="text-lg font-medium text-slate-900 dark:text-white">{data.Remarks || "Zero remarks documented"}</p>
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Administrative Remarks</p>
+                    <p className="text-lg font-medium text-black ">{data.Remarks || "Zero remarks documented"}</p>
                   </div>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-slate-900 text-white border-none shadow-2xl">
+            <Card className="bg-white backdrop-blur-xl border border-slate-200 shadow-2xl">
               <div className="flex items-center gap-4">
-                <div className="p-3 rounded-2xl bg-white/10 text-white">
+                <div className="p-3 rounded-2xl bg-slate-50 text-black">
                   <Calendar size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Record Integrity</p>
+                  <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Record Integrity</p>
                   <p className="text-sm text-slate-300">This record is synchronized with the central database and was last verified on {new Date().toLocaleDateString()}.</p>
                 </div>
               </div>

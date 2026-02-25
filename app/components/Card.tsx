@@ -7,10 +7,10 @@ interface CardProps {
 
 export default function Card({ children, className = "", noPadding = false, title }: CardProps) {
     return (
-        <div className={`glass dark:bg-slate-900/40 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none overflow-hidden ${className}`}>
+        <div className={`bg-white backdrop-blur-xl rounded-[2.5rem] border border-slate-200 shadow-2xl relative overflow-hidden ${className}`}>
             {title && (
-                <div className="px-8 py-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>
+                <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/50">
+                    <h3 className="text-xl font-bold text-black tracking-tight">{title}</h3>
                 </div>
             )}
             <div className={noPadding ? "" : "p-8"}>

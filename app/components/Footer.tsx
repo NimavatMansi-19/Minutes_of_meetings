@@ -28,14 +28,14 @@ export default function Footer() {
                 </div>
 
                 <div className="flex flex-col items-center justify-center w-full max-w-2xl border-t border-slate-100 pt-6">
-                    <p className="text-center text-[11px] font-medium text-slate-400 tracking-widest uppercase">
+                    <p className="text-center text-[11px] font-medium text-gray-700 tracking-widest uppercase">
                         &copy; {new Date().getFullYear()} Enterprise Governance. All rights reserved.
                     </p>
 
-                    <div className="flex items-center justify-center gap-4 mt-4 text-[11px] font-medium text-slate-400 tracking-widest uppercase">
-                        <Link href="#" className="hover:text-slate-600 transition-colors">Privacy</Link>
-                        <span className="w-1 h-1 rounded-full bg-slate-200"></span>
-                        <Link href="#" className="hover:text-slate-600 transition-colors">Terms</Link>
+                    <div className="flex items-center justify-center gap-4 mt-4 text-[11px] font-medium text-gray-700 tracking-widest uppercase">
+                        <Link href="#" className="hover:text-gray-700 transition-colors">Privacy</Link>
+                        <span className="w-1 h-1 rounded-full bg-slate-200/50"></span>
+                        <Link href="#" className="hover:text-gray-700 transition-colors">Terms</Link>
                     </div>
                 </div>
 

@@ -49,7 +49,7 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Meeting ID Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <Calendar size={16} className="text-indigo-500" />
                                         Session ID
                                     </label>
@@ -64,7 +64,7 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
 
                                 {/* Staff ID Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <User size={16} className="text-indigo-500" />
                                         Personnel ID
                                     </label>
@@ -79,7 +79,7 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
 
                                 {/* Remarks Input */}
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <MessageSquare size={16} className="text-indigo-500" />
                                         Assignment Remarks
                                     </label>
@@ -93,7 +93,7 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
                                 </div>
 
                                 {/* Attendance Checkbox */}
-                                <div className="md:col-span-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 group transition-all hover:border-emerald-200 dark:hover:border-emerald-900/30">
+                                <div className="md:col-span-2 p-4 rounded-2xl bg-white border border-slate-200 group transition-all hover:border-sky-500/50">
                                     <label className="flex items-center gap-4 cursor-pointer">
                                         <div className="relative">
                                             <input
@@ -102,20 +102,20 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
                                                 defaultChecked={data.IsPresent ?? false}
                                                 className="peer sr-only"
                                             />
-                                            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 dark:peer-focus:ring-emerald-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-emerald-500"></div>
+                                            <div className="w-11 h-6 bg-slate-200/50 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-sky-400 :ring-emerald-800 rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all  peer-checked:bg-sky-500"></div>
                                         </div>
                                         <div>
-                                            <p className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                                <CheckCircle size={16} className="text-emerald-500" />
+                                            <p className="font-bold text-black  flex items-center gap-2">
+                                                <CheckCircle size={16} className="text-sky-500" />
                                                 Confirm Attendance
                                             </p>
-                                            <p className="text-xs text-slate-500">Toggling this will update the member's presence status for this session.</p>
+                                            <p className="text-xs text-gray-600">Toggling this will update the member's presence status for this session.</p>
                                         </div>
                                     </label>
                                 </div>
                             </div>
 
-                            <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                            <div className="pt-6 border-t border-slate-200">
                                 <button
                                     type="submit"
                                     className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-indigo-500/20"

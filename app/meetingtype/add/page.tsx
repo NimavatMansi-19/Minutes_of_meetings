@@ -31,7 +31,7 @@ async function AddMeetingType() {
                             <div className="space-y-6">
                                 {/* Name Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <Type size={16} className="text-indigo-500" />
                                         Classification Label
                                     </label>
@@ -42,12 +42,12 @@ async function AddMeetingType() {
                                         className="input-field uppercase tracking-tight font-bold"
                                         required
                                     />
-                                    <p className="text-xs text-slate-500">This label will be used as the primary identifier for meetings under this category.</p>
+                                    <p className="text-xs text-gray-600">This label will be used as the primary identifier for meetings under this category.</p>
                                 </div>
 
                                 {/* Remarks Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <MessageSquare size={16} className="text-indigo-500" />
                                         Administrative Directives
                                     </label>
@@ -59,7 +59,7 @@ async function AddMeetingType() {
                                 </div>
                             </div>
 
-                            <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
+                            <div className="pt-6 border-t border-slate-200">
                                 <button
                                     type="submit"
                                     className="w-full btn-primary py-4 rounded-2xl text-lg font-bold flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-xl shadow-indigo-500/20"

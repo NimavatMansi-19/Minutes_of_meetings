@@ -23,6 +23,7 @@ export default function Navbar() {
 
     useEffect(() => {
         const token = getToken();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsLoggedIn(!!token);
         setRole(getRoleFromToken());
     }, [pathname]);
@@ -47,16 +48,16 @@ export default function Navbar() {
     if (pathname === '/' || pathname === '/login') return null;
 
     return (
-        <nav className="sticky top-0 z-50 bg-[#161224]/80 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-2xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-[72px]">
                     <div className="flex items-center gap-10">
                         {/* Branding */}
-                        <Link href="/dashboard" className="flex items-center gap-3 group">
-                            <div className="bg-gradient-to-br from-indigo-500 to-violet-600 p-2 rounded-xl shadow-lg shadow-indigo-500/20 shadow-inner border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                                <Command size={22} className="text-white" />
+                        <Link href="/dashboard" className="flex items-center gap-2.5 group">
+                            <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 w-8 h-8 rounded-lg shadow-md border border-indigo-500/10 flex items-center justify-center group-hover:scale-[1.03] transition-transform duration-300">
+                                <Command size={18} className="text-white" />
                             </div>
-                            <span className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
+                            <span className="text-lg font-bold tracking-tight text-black block">
                                 MinutesMaster
                             </span>
                         </Link>
@@ -68,12 +69,12 @@ export default function Navbar() {
                                     <Link
                                         key={link.href}
                                         href={link.href}
-                                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${isActive(link.href)
-                                            ? "bg-white/10 text-white shadow-inner border border-white/5"
-                                            : "text-white/60 hover:bg-white/5 hover:text-white"
+                                        className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${isActive(link.href)
+                                            ? "bg-slate-100/80 text-indigo-700 shadow-sm border border-slate-200"
+                                            : "text-gray-700 hover:bg-slate-50 hover:text-black"
                                             }`}
                                     >
-                                        <link.icon size={18} className={isActive(link.href) ? "text-indigo-400" : ""} />
+                                        <link.icon size={16} className={isActive(link.href) ? "text-indigo-600" : "text-slate-400"} />
                                         {link.label}
                                     </Link>
                                 ))}
@@ -81,16 +82,17 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
                         {isLoggedIn ? (
-                            <div className="flex items-center gap-4">
-                                <div className="hidden sm:flex flex-col items-end px-3 py-1 rounded-lg bg-white/5 border border-white/5">
-                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none mb-1">Role</span>
-                                    <span className="text-sm font-semibold text-indigo-300 leading-none capitalize">{role?.replace('_', ' ') || 'User'}</span>
+                            <div className="flex items-center gap-3">
+                                <div className="hidden sm:flex flex-col items-end px-3 py-1 bg-transparent">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Role</span>
+                                    <span className="text-sm font-bold text-gray-800 leading-none capitalize">{role?.replace('_', ' ') || 'User'}</span>
                                 </div>
+                                <div className="h-6 w-px bg-slate-200 hidden sm:block mx-1"></div>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all px-4 py-2.5 rounded-xl text-sm font-bold shadow-lg shadow-red-500/5 hover:shadow-red-500/10 active:scale-95"
+                                    className="flex items-center gap-1.5 hover:bg-amber-50 text-gray-600 hover:text-amber-700 transition-colors px-3 py-1.5 rounded-lg text-sm font-semibold"
                                 >
                                     <LogOut size={16} strokeWidth={2.5} />
                                     <span className="hidden sm:inline">Logout</span>
@@ -99,7 +101,7 @@ export default function Navbar() {
                         ) : (
                             <Link
                                 href="/"
-                                className="flex items-center gap-2 bg-gradient-to-r from-[#211833] via-[#332560] to-[#594ea5] hover:from-[#2a1e42] hover:via-[#3f2f76] hover:to-[#6a5fc1] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg border border-white/10 transition-all active:scale-95"
+                                className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm transition-colors"
                             >
                                 <LogIn size={16} strokeWidth={2.5} />
                                 Sign In

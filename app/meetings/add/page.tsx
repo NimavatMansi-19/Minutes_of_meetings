@@ -34,7 +34,7 @@ async function AddMeeting() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 {/* Date Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <Clock size={16} className="text-indigo-500" />
                                         Meeting Schedule
                                     </label>
@@ -48,7 +48,7 @@ async function AddMeeting() {
 
                                 {/* Type Input */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <Type size={16} className="text-indigo-500" />
                                         Classification
                                     </label>
@@ -68,7 +68,7 @@ async function AddMeeting() {
 
                                 {/* Description Input */}
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <FileText size={16} className="text-indigo-500" />
                                         Agenda Description
                                     </label>
@@ -82,7 +82,7 @@ async function AddMeeting() {
 
                                 {/* Document Path Input */}
                                 <div className="md:col-span-2 space-y-2">
-                                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                    <label className="text-sm font-bold text-gray-800  flex items-center gap-2">
                                         <LinkIcon size={16} className="text-indigo-500" />
                                         Resource Path / Repository Link
                                     </label>
@@ -95,10 +95,10 @@ async function AddMeeting() {
                                 </div>
                             </div>
 
-                            <div className="pt-6 flex justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+                            <div className="pt-6 flex justify-end gap-3 border-t border-slate-200">
                                 <button
                                     type="reset"
-                                    className="px-6 py-2.5 rounded-xl font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                                    className="px-6 py-2.5 rounded-xl font-semibold text-gray-700 hover:bg-slate-50 transition-all"
                                 >
                                     Reset Details
                                 </button>

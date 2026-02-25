@@ -26,7 +26,7 @@ async function DetailMeetingMember({ params }: { params: Promise<{ MeetingMember
         <Section>
           <Card>
             <div className="text-center py-12">
-              <p className="text-slate-500 font-medium text-lg">The requested membership record could not be retrieved.</p>
+              <p className="text-gray-600 font-medium text-lg">The requested membership record could not be retrieved.</p>
             </div>
           </Card>
         </Section>
@@ -53,23 +53,23 @@ async function DetailMeetingMember({ params }: { params: Promise<{ MeetingMember
           {/* Status Sidebar */}
           <div className="md:col-span-1 space-y-6">
             <Card className="text-center">
-              <div className={`mx-auto w-20 h-20 rounded-[2rem] flex items-center justify-center mb-4 shadow-xl ${data.IsPresent ? 'bg-emerald-100 text-emerald-600 shadow-emerald-500/10' : 'bg-slate-100 text-slate-500 shadow-slate-500/10'}`}>
+              <div className={`mx-auto w-20 h-20 rounded-[2rem] flex items-center justify-center mb-4 shadow-xl ${data.IsPresent ? 'bg-sky-500/20 text-sky-500 shadow-sky-500/20 border border-sky-200' : 'bg-white text-gray-600 text-black shadow-slate-500/10'}`}>
                 {data.IsPresent ? <CheckCircle size={40} /> : <XCircle size={40} />}
               </div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">
+              <h2 className="text-xl font-bold text-black  uppercase tracking-tight">
                 {data.IsPresent ? 'Present' : 'Absent'}
               </h2>
-              <p className="text-sm text-slate-500 font-medium tracking-wide">Presence Status</p>
+              <p className="text-sm text-gray-600 font-medium tracking-wide">Presence Status</p>
 
-              <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Index Reference</p>
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Index Reference</p>
                 <p className="font-bold text-indigo-600">MEM-{data.MeetingMemberID}</p>
               </div>
             </Card>
 
-            <Card className="bg-slate-900 text-white border-none">
+            <Card className="bg-slate-50 text-black border-none">
               <div className="flex flex-col gap-2">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Administrative Info</p>
+                <p className="text-xs font-bold text-gray-700 uppercase tracking-widest">Administrative Info</p>
                 <p className="text-sm text-slate-300 leading-relaxed italic">
                   "{data.Remarks || "No specific remarks documented for this membership record."}"
                 </p>
@@ -81,14 +81,14 @@ async function DetailMeetingMember({ params }: { params: Promise<{ MeetingMember
           <div className="md:col-span-2 space-y-6">
             <Card title="Personnel Assignment">
               <div className="flex items-center gap-6 p-2">
-                <div className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center text-indigo-600 font-black text-2xl">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-50  flex items-center justify-center text-indigo-600 font-black text-2xl">
                   {data.staff?.StaffName?.charAt(0) || "P"}
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white uppercase tracking-tight">
+                  <h3 className="text-xl font-bold text-black  uppercase tracking-tight">
                     {data.staff?.StaffName || "Unknown Personnel"}
                   </h3>
-                  <div className="flex items-center gap-2 text-slate-500 text-sm font-medium">
+                  <div className="flex items-center gap-2 text-gray-600 text-sm font-medium">
                     <Hash size={14} />
                     <span>Reference ID: {data.StaffID}</span>
                   </div>
@@ -99,16 +99,16 @@ async function DetailMeetingMember({ params }: { params: Promise<{ MeetingMember
             <Card title="Associated Session">
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                     <Calendar size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Session Identity</p>
-                    <p className="text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Session Identity</p>
+                    <p className="text-lg font-bold text-black  leading-tight">
                       {data.meetings?.meetingtype?.MeetingTypeName || "Standard Event"}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded">
+                      <span className="text-xs font-bold bg-indigo-100  text-indigo-600 text-indigo-300 px-2 py-0.5 rounded">
                         PRO-{data.MeetingID}
                       </span>
                     </div>
@@ -116,12 +116,12 @@ async function DetailMeetingMember({ params }: { params: Promise<{ MeetingMember
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                  <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                     <Info size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Session Agenda</p>
-                    <p className="text-sm text-slate-700 dark:text-slate-300 italic">
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Session Agenda</p>
+                    <p className="text-sm text-gray-800  italic">
                       {data.meetings?.MeetingDescription || "No agenda details captured for this specific session."}
                     </p>
                   </div>

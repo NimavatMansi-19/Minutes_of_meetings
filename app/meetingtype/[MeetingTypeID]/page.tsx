@@ -18,7 +18,7 @@ async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: 
                 <Section>
                     <Card>
                         <div className="text-center py-12">
-                            <p className="text-slate-500 font-medium text-lg">The requested classification schema could not be identified.</p>
+                            <p className="text-gray-600 font-medium text-lg">The requested classification schema could not be identified.</p>
                         </div>
                     </Card>
                 </Section>
@@ -48,10 +48,10 @@ async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: 
                                 <div className="mx-auto w-20 h-20 rounded-[2rem] bg-indigo-600 flex items-center justify-center text-white mb-4 shadow-xl shadow-indigo-500/20">
                                     <Type size={32} />
                                 </div>
-                                <h2 className="text-2xl font-black text-indigo-600 dark:text-indigo-400 tracking-tight uppercase">
+                                <h2 className="text-2xl font-black text-indigo-600 text-indigo-400 tracking-tight uppercase">
                                     {data.MeetingTypeName}
                                 </h2>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">Active Classification</p>
+                                <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mt-2">Active Classification</p>
                             </Card>
                         </div>
 
@@ -59,22 +59,22 @@ async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: 
                             <Card title="Structural Directives">
                                 <div className="space-y-8">
                                     <div className="flex items-start gap-4">
-                                        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                                        <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                                             <Hash size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Index ID</p>
-                                            <p className="text-lg font-bold text-slate-900 dark:text-white">TYPE-{data.MeetingTypeID}</p>
+                                            <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Index ID</p>
+                                            <p className="text-lg font-bold text-black ">TYPE-{data.MeetingTypeID}</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-start gap-4">
-                                        <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400">
+                                        <div className="p-3 rounded-2xl bg-white text-indigo-600 text-indigo-400">
                                             <MessageSquare size={20} />
                                         </div>
                                         <div>
-                                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Administrative Remarks</p>
-                                            <p className="text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                                            <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">Administrative Remarks</p>
+                                            <p className="text-lg text-gray-800  leading-relaxed font-medium">
                                                 {data.Remarks || "No specific administrative directives documented for this classification schema."}
                                             </p>
                                         </div>
@@ -82,13 +82,13 @@ async function DetailMeetingType({ params }: { params: Promise<{ MeetingTypeID: 
                                 </div>
                             </Card>
 
-                            <Card className="bg-slate-900 text-white border-none shadow-2xl">
+                            <Card className="bg-white backdrop-blur-xl border border-slate-200 shadow-2xl">
                                 <div className="flex items-center gap-4">
-                                    <div className="p-3 rounded-2xl bg-white/10 text-white">
+                                    <div className="p-3 rounded-2xl bg-slate-50 text-black">
                                         <Info size={20} />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">System Integrity</p>
+                                        <p className="text-xs font-bold text-gray-700 uppercase tracking-widest mb-1">System Integrity</p>
                                         <p className="text-sm text-slate-300">This schema is locked for active governance synchronization. Manual decommissioning requires administrative override.</p>
                                     </div>
                                 </div>
