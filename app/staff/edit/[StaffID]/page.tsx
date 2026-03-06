@@ -12,7 +12,7 @@ async function EditStaff({ params }: { params: Promise<{ StaffID: string }> }) {
   const session = await requireUser();
   const role = session.role;
   if (role !== 'admin' && role !== 'meeting_convener') {
-    redirect("/");
+    redirect("/unauthorized");
   }
 
   const { StaffID } = await params;

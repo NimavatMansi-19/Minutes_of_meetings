@@ -11,9 +11,10 @@ interface PageHeaderProps {
         label: string;
         icon?: LucideIcon;
     };
+    children?: React.ReactNode;
 }
 
-export default function PageHeader({ title, description, icon: Icon, backHref, action }: PageHeaderProps) {
+export default function PageHeader({ title, description, icon: Icon, backHref, action, children }: PageHeaderProps) {
     return (
         <div className="relative overflow-hidden bg-white backdrop-blur-xl border-b border-slate-200 mb-8">
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-violet-500/10 pointer-events-none" />
@@ -46,15 +47,18 @@ export default function PageHeader({ title, description, icon: Icon, backHref, a
                             )}
                         </div>
                     </div>
-                    {action && (
-                        <Link
-                            href={action.href}
-                            className="bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white px-5 py-2.5 rounded-xl font-bold tracking-wide shadow-lg shadow-indigo-500/30 border border-slate-200 transition-all active:scale-95 flex items-center gap-2 whitespace-nowrap"
-                        >
-                            {action.icon && <action.icon size={18} />}
-                            {action.label}
-                        </Link>
-                    )}
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
+                        {children}
+                        {action && (
+                            <Link
+                                href={action.href}
+                                className="bg-gradient-to-r w-full sm:w-auto from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white px-5 py-2.5 rounded-xl font-bold tracking-wide shadow-lg shadow-indigo-500/30 border border-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2 whitespace-nowrap"
+                            >
+                                {action.icon && <action.icon size={18} />}
+                                {action.label}
+                            </Link>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

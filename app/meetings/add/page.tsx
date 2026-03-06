@@ -13,7 +13,7 @@ async function AddMeeting() {
     const role = session.role;
 
     if (role !== 'admin' && role !== 'meeting_convener') {
-        redirect("/");
+        redirect("/unauthorized");
     }
 
     const meetingTypes = await prisma.meetingtype.findMany();

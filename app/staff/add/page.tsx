@@ -11,7 +11,7 @@ async function AddUser() {
   const session = await requireUser();
   const role = session.role;
   if (role !== 'admin' && role !== 'meeting_convener') {
-    redirect("/");
+    redirect("/unauthorized");
   }
 
   return (

@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/Prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/session";
+import { redirect } from "next/navigation";
 
 export default async function deleteMeeting(id: number) {
     const user = await getCurrentUser();
@@ -24,7 +25,7 @@ export default async function deleteMeeting(id: number) {
     const isOwner = meeting.CreatedBy === user.StaffID;
 
     if (!isAdmin && (!isConvener || !isOwner)) {
-        throw new Error("Permission denied: You can only delete meetings you created.");
+        redirect("/unauthorized");
     }
 
     await prisma.meetings.delete({

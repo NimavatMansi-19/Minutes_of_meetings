@@ -8,17 +8,28 @@ import DeleteUserBtn from "../ui/DeleteUserBtn";
 import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import Card from "../components/Card";
+import SearchBar from "../components/SearchBar";
 import { Layers, Plus, FileEdit, Eye, Hash, MessageSquare, Type } from "lucide-react";
 
-async function MeetingTypeList() {
+async function MeetingTypeList(props: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
     const session = await requireUser();
     const role = session.role;
 
     if (role !== 'admin' && role !== 'meeting_convener') {
-        redirect("/");
+        redirect("/unauthorized");
     }
 
-    const data = await prisma.meetingtype.findMany();
+    const searchParams = await props.searchParams;
+    const q = searchParams?.q || "";
+
+    const data = await prisma.meetingtype.findMany({
+        where: q ? {
+            OR: [
+                { MeetingTypeName: { contains: q } },
+                { Remarks: { contains: q } }
+            ]
+        } : undefined
+    });
 
     return (
         <div className="bg-pattern min-h-screen pb-12">
@@ -32,7 +43,9 @@ async function MeetingTypeList() {
                     label: "Define Type",
                     icon: Plus
                 }}
-            />
+            >
+                <SearchBar placeholder="Search classifications..." />
+            </PageHeader>
 
             <Section>
                 <Card noPadding>

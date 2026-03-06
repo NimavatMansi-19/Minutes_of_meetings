@@ -7,15 +7,27 @@ import DeleteUserBtn from "../ui/DeleteUserBtn";
 import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import Card from "../components/Card";
+import SearchBar from "../components/SearchBar";
 import { Users, UserPlus, FileEdit, Eye, Mail, Phone, Hash } from "lucide-react";
 import { requireUser } from "@/lib/session";
 
-async function Staff() {
+async function Staff(props: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
   const session = await requireUser();
   const role = session.role;
   const isAdminOrConvener = role === 'admin' || role === 'meeting_convener';
 
-  const data = await prisma.staff.findMany();
+  const searchParams = await props.searchParams;
+  const q = searchParams?.q || "";
+
+  const data = await prisma.staff.findMany({
+    where: q ? {
+      OR: [
+        { StaffName: { contains: q, } },
+        { EmailAddress: { contains: q, } },
+        { MobileNo: { contains: q, } }
+      ]
+    } : undefined
+  });
 
   return (
     <div className="bg-pattern min-h-screen pb-12">
@@ -29,7 +41,9 @@ async function Staff() {
           label: "Onboard Staff",
           icon: UserPlus
         } : undefined}
-      />
+      >
+        <SearchBar placeholder="Search staff members..." />
+      </PageHeader>
 
       <Section>
         <Card noPadding>

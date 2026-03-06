@@ -13,7 +13,10 @@ import {
     ArrowRight,
     Settings,
     Command,
-    Sparkles
+    Sparkles,
+    User,
+    Mail,
+    Phone
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -30,7 +33,7 @@ export default async function DashboardPage() {
 
                 {/* Hero Section */}
                 <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-5 bg-white backdrop-blur-xl border border-slate-200 rounded-3xl p-8 shadow-sm relative overflow-hidden">
-                    
+
 
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 text-indigo-600 text-[10px] font-bold tracking-widest uppercase mb-4 px-3 py-1 rounded-full border border-slate-200">
@@ -61,7 +64,7 @@ export default async function DashboardPage() {
                     {/* Total Staff */}
                     {isAdminOrConvener && (
                         <div className="group relative bg-white backdrop-blur-xl border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden hover:bg-slate-50 transition-colors duration-500">
-                            
+
 
                             <div className="flex items-start justify-between relative z-10">
                                 <div className="bg-slate-50/50 p-2.5 rounded-xl text-indigo-600 border border-slate-200 shadow-inner group-hover:scale-110 transition-transform duration-500">
@@ -81,8 +84,6 @@ export default async function DashboardPage() {
 
                     {/* Active Meetings */}
                     <div className="group relative bg-white backdrop-blur-xl border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden hover:bg-slate-50 transition-colors duration-500">
-                        
-
                         <div className="flex items-start justify-between relative z-10">
                             <div className="bg-slate-50/50 p-2.5 rounded-xl text-amber-700 border border-slate-200 shadow-inner group-hover:scale-110 transition-transform duration-500">
                                 <Calendar size={20} strokeWidth={2.5} />
@@ -90,7 +91,7 @@ export default async function DashboardPage() {
                             <div className="text-[10px] font-black tracking-widest text-gray-900 bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded-full shadow-sm shadow-amber-100 border border-amber-600">ACTIVE</div>
                         </div>
                         <div className="mt-4 relative z-10">
-                            <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-1">Total Meetings</p>
+                            <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-1">{isAdminOrConvener ? "Total Meetings" : "My Meetings"}</p>
                             <h3 className="text-3xl font-black text-gray-900 tracking-tight">{stats.totalMeetings}</h3>
                         </div>
                         <Link href="/meetings" className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-amber-600 hover:text-amber-700 transition-colors relative z-10 group/link">
@@ -98,10 +99,29 @@ export default async function DashboardPage() {
                         </Link>
                     </div>
 
+                    {/* Staff Profile - Only for staff */}
+                    {!isAdminOrConvener && stats.staffProfile && (
+                        <div className="group relative bg-white backdrop-blur-xl border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden hover:bg-slate-50 transition-colors duration-500 sm:col-span-2 lg:col-span-1">
+                            <div className="flex items-start justify-between relative z-10">
+                                <div className="bg-slate-50/50 p-2.5 rounded-xl text-indigo-600 border border-slate-200 shadow-inner group-hover:scale-110 transition-transform duration-500">
+                                    <User size={20} strokeWidth={2.5} />
+                                </div>
+                            </div>
+                            <div className="mt-4 relative z-10">
+                                <p className="text-xs font-bold text-gray-600 uppercase tracking-widest mb-1">My Profile Overview</p>
+                                <h3 className="text-xl font-black text-gray-900 tracking-tight line-clamp-1 truncate">{stats.staffProfile.StaffName}</h3>
+                                <div className="mt-2.5 space-y-1.5">
+                                    <p className="text-sm font-medium text-gray-600 flex items-center gap-2 truncate"><Mail size={14} className="text-slate-400 shrink-0" /> {stats.staffProfile.EmailAddress || "No email"}</p>
+                                    <p className="text-sm font-medium text-gray-600 flex items-center gap-2"><Phone size={14} className="text-slate-400 shrink-0" /> {stats.staffProfile.MobileNo || "No contact"}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Active Members */}
                     {isAdminOrConvener && (
                         <div className="group relative bg-white backdrop-blur-xl border border-slate-200 rounded-2xl p-5 shadow-sm overflow-hidden hover:bg-slate-50 transition-colors duration-500">
-                            
+
 
                             <div className="flex items-start justify-between relative z-10">
                                 <div className="bg-slate-50/50 p-2.5 rounded-xl text-sky-600 border border-slate-200 shadow-inner group-hover:scale-110 transition-transform duration-500">
@@ -211,15 +231,17 @@ export default async function DashboardPage() {
                                     </Link>
                                 )}
 
-                                <Link href="/meetings/add" className="flex items-center justify-between group p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all duration-300">
-                                    <div className="flex items-center gap-4 text-gray-800 group-hover:text-black">
-                                        <div className="text-amber-600 group-hover:scale-110 transition-transform duration-300">
-                                            <Calendar size={22} />
+                                {isAdminOrConvener && (
+                                    <Link href="/meetings/add" className="flex items-center justify-between group p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all duration-300">
+                                        <div className="flex items-center gap-4 text-gray-800 group-hover:text-black">
+                                            <div className="text-amber-600 group-hover:scale-110 transition-transform duration-300">
+                                                <Calendar size={22} />
+                                            </div>
+                                            <span className="font-semibold text-sm tracking-wide">Schedule Meeting</span>
                                         </div>
-                                        <span className="font-semibold text-sm tracking-wide">Schedule Meeting</span>
-                                    </div>
-                                    <ChevronRight size={18} className="text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all duration-300" />
-                                </Link>
+                                        <ChevronRight size={18} className="text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all duration-300" />
+                                    </Link>
+                                )}
 
                                 {isAdminOrConvener && (
                                     <Link href="/meetingmember/add" className="flex items-center justify-between group p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all duration-300">

@@ -8,21 +8,26 @@ import DeleteUserBtn from "../ui/DeleteUserBtn";
 import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import Card from "../components/Card";
+import SearchBar from "../components/SearchBar";
 import { Users, UserPlus, FileEdit, Eye, Hash, MessageSquare, CheckCircle, XCircle } from "lucide-react";
 
-async function MeetingMember() {
+async function MeetingMember(props: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
   const session = await requireUser();
   const role = session.role;
 
   if (role !== 'admin' && role !== 'meeting_convener') {
-    redirect("/");
+    redirect("/unauthorized");
   }
+
+  const searchParams = await props.searchParams;
+  const q = searchParams?.q || "";
 
   let queryOptions: any = {
     include: {
       staff: true,
       meetings: true
-    }
+    },
+    where: {}
   };
 
   if (role === 'meeting_convener') {
@@ -32,11 +37,26 @@ async function MeetingMember() {
     });
 
     if (myMeetings.length === 0) {
-      queryOptions.where = { MeetingID: -1 };
+      queryOptions.where.MeetingID = -1;
     } else {
       const meetingIds = myMeetings.map((m: any) => m.MeetingID);
-      queryOptions.where = { MeetingID: { in: meetingIds } };
+      queryOptions.where.MeetingID = { in: meetingIds };
     }
+  }
+
+  if (q) {
+    queryOptions.where.OR = [
+      { staff: { StaffName: { contains: q } } },
+      { Remarks: { contains: q } }
+    ];
+    const numQ = parseInt(q);
+    if (!isNaN(numQ)) {
+      queryOptions.where.OR.push({ MeetingID: numQ });
+    }
+  }
+
+  if (Object.keys(queryOptions.where).length === 0) {
+    delete queryOptions.where;
   }
 
   const data = await prisma.meetingmember.findMany(queryOptions);
@@ -53,7 +73,9 @@ async function MeetingMember() {
           label: "Assign Member",
           icon: UserPlus
         }}
-      />
+      >
+        <SearchBar placeholder="Search attendance..." />
+      </PageHeader>
 
       <Section>
         <Card noPadding>

@@ -7,23 +7,84 @@ import DeleteUserBtn from "../ui/DeleteUserBtn";
 import PageHeader from "../components/PageHeader";
 import Section from "../components/Section";
 import Card from "../components/Card";
+import SearchBar from "../components/SearchBar";
 import { Calendar, Plus, FileEdit, Eye, Hash, Clock, FileText, CheckCircle2, XCircle } from "lucide-react";
 
-async function MeetingList() {
+async function MeetingList(props: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
     const session = await requireUser();
     const role = session.role;
     const isAdminOrConvener = role === 'admin' || role === 'meeting_convener';
 
-    let where: any = undefined;
+    const searchParams = await props.searchParams;
+    const q = searchParams?.q || "";
+
+    let where: any = {};
     if (role === 'meeting_convener') {
-        where = { CreatedBy: Number(session.StaffID) };
+        const staffId = Number(session?.StaffID) || -1;
+        where.OR = [
+            { CreatedBy: staffId },
+            {
+                meetingmember: {
+                    some: { StaffID: staffId }
+                }
+            },
+            {
+                MeetingDate: { gte: new Date() },
+                CreatedBy: 0
+            },
+            {
+                MeetingDate: { gte: new Date() },
+                CreatedBy: null
+            }
+        ];
+    } else if (role === 'staff') {
+        const staffId = Number(session?.StaffID) || -1;
+        where.OR = [
+            {
+                meetingmember: {
+                    some: { StaffID: staffId }
+                }
+            },
+            {
+                MeetingDate: { gte: new Date() },
+                CreatedBy: 0
+            },
+            {
+                MeetingDate: { gte: new Date() },
+                CreatedBy: null
+            }
+        ];
+    }
+
+    if (q) {
+        const queryFilter: any = {
+            OR: [
+                { MeetingDescription: { contains: q } },
+                { meetingtype: { MeetingTypeName: { contains: q } } }
+            ]
+        };
+        const numQ = parseInt(q);
+        if (!isNaN(numQ)) {
+            queryFilter.OR.push({ MeetingID: numQ });
+        }
+
+        if (where.OR) {
+            where.AND = [
+                { OR: where.OR },
+                queryFilter
+            ];
+            delete where.OR;
+        } else {
+            where.OR = queryFilter.OR;
+        }
     }
 
     const data = await prisma.meetings.findMany({
-        where,
+        where: Object.keys(where).length > 0 ? where : undefined,
         include: {
             meetingtype: true
-        }
+        },
+        orderBy: { MeetingDate: 'desc' }
     });
 
     return (
@@ -38,7 +99,9 @@ async function MeetingList() {
                     label: "Schedule Meeting",
                     icon: Plus
                 } : undefined}
-            />
+            >
+                <SearchBar placeholder="Search meetings..." />
+            </PageHeader>
 
             <Section>
                 <Card noPadding>

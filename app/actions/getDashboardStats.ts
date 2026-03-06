@@ -7,14 +7,57 @@ export async function getDashboardStats() {
     const user = await getCurrentUser();
 
     let meetingFilter: any = undefined;
+    let staffProfile = null;
 
-    // Conveners can only see meetings they created
-    if (user && user.sys_role === 'meeting_convener') {
-        meetingFilter = { CreatedBy: Number(user.StaffID) };
+    if (user && (user.sys_role === 'meeting_convener' || user.role === 'meeting_convener')) {
+        const staffId = Number(user.StaffID);
+        if (!isNaN(staffId) && staffId > 0) {
+            meetingFilter = {
+                OR: [
+                    { CreatedBy: staffId },
+                    {
+                        meetingmember: {
+                            some: { StaffID: staffId }
+                        }
+                    },
+                    {
+                        MeetingDate: { gte: new Date() },
+                        CreatedBy: 0
+                    },
+                    {
+                        MeetingDate: { gte: new Date() },
+                        CreatedBy: null
+                    }
+                ]
+            };
+        }
+    } else if (user && (user.sys_role === 'staff' || user.role === 'staff')) {
+        const staffId = Number(user.StaffID);
+        if (!isNaN(staffId) && staffId > 0) {
+            meetingFilter = {
+                OR: [
+                    {
+                        meetingmember: {
+                            some: {
+                                StaffID: staffId
+                            }
+                        }
+                    },
+                    {
+                        MeetingDate: { gte: new Date() },
+                        CreatedBy: 0
+                    },
+                    {
+                        MeetingDate: { gte: new Date() },
+                        CreatedBy: null
+                    }
+                ]
+            };
+            staffProfile = await prisma.staff.findUnique({
+                where: { StaffID: staffId }
+            });
+        }
     }
-
-    // Staff and Admin see all (Staff limitations are on UI/Roles, checking requirement "View meetings they created" applies specifically to Convener)
-    // "if staff then only one" was about tables visible on login, handled in dashboard page.
 
     const [totalStaff, totalMeetings, totalMembers, meetingsBase] = await Promise.all([
         prisma.staff.count(),
@@ -56,5 +99,6 @@ export async function getDashboardStats() {
         totalMeetings,
         totalMembers,
         upcomingMeetings,
+        staffProfile,
     };
 }

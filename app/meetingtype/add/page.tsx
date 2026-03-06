@@ -12,7 +12,7 @@ async function AddMeetingType() {
     const role = session.role;
 
     if (role !== 'admin' && role !== 'meeting_convener') {
-        redirect("/");
+        redirect("/unauthorized");
     }
 
     return (

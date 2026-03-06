@@ -24,13 +24,13 @@ export async function saveMeetingMember(formData: FormData) {
     const isConvener = user.role === 'meeting_convener';
 
     if (!isAdmin && !isConvener) {
-        throw new Error("Permission denied: only admins and conveners can add members.");
+        redirect("/unauthorized");
     }
 
     const isOwner = meeting.CreatedBy === user.StaffID;
 
     if (isConvener && !isOwner) {
-        throw new Error("Permission denied: You can only add members to meetings you created.");
+        redirect("/unauthorized");
     }
 
     await prisma.meetingmember.create({

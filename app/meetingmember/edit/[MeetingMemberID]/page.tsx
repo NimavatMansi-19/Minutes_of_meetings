@@ -13,7 +13,7 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
     const role = session.role;
 
     if (role !== 'admin' && role !== 'meeting_convener') {
-        redirect("/");
+        redirect("/unauthorized");
     }
 
     const { MeetingMemberID } = await params;
@@ -21,10 +21,17 @@ async function EditMeetingMember({ params }: { params: Promise<{ MeetingMemberID
         where: {
             MeetingMemberID: Number(MeetingMemberID),
         },
+        include: {
+            meetings: true
+        }
     });
 
     if (!data) {
         redirect("/meetingmember");
+    }
+
+    if (role === 'meeting_convener' && data.meetings?.CreatedBy !== session.StaffID) {
+        redirect("/unauthorized");
     }
 
     return (

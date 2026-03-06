@@ -13,7 +13,7 @@ async function EditMeetingType({ params }: { params: Promise<{ MeetingTypeID: st
     const role = session.role;
 
     if (role !== 'admin' && role !== 'meeting_convener') {
-        redirect("/");
+        redirect("/unauthorized");
     }
 
     const { MeetingTypeID } = await params;

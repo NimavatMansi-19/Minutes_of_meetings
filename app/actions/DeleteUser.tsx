@@ -19,13 +19,13 @@ export default async function deleteUser(MeetingMemberID: number) {
   const isConvener = user.role === 'meeting_convener';
 
   if (!isAdmin && !isConvener) {
-    throw new Error("Permission denied: only admins and conveners can delete members.");
+    redirect("/unauthorized");
   }
 
   const isOwner = meeting.CreatedBy === user.StaffID;
 
   if (isConvener && !isOwner) {
-    throw new Error("Permission denied: You can only remove members from meetings you created.");
+    redirect("/unauthorized");
   }
 
   await prisma.meetingmember.delete({ where: { MeetingMemberID } });

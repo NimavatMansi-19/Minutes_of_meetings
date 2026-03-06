@@ -21,7 +21,7 @@ export async function updateMeetingMember(formData: FormData) {
     const isConvener = user.role === 'meeting_convener';
 
     if (!isAdmin && !isConvener) {
-        throw new Error("Permission denied: only admins and conveners can update members.");
+        redirect("/unauthorized");
     }
 
     const currentMember = await prisma.meetingmember.findUnique({ where: { MeetingMemberID: id } });
@@ -34,7 +34,7 @@ export async function updateMeetingMember(formData: FormData) {
 
     if (isConvener) {
         if (sourceMeeting.CreatedBy !== user.StaffID || targetMeeting.CreatedBy !== user.StaffID) {
-            throw new Error("Permission denied: You can only manage members for meetings you created.");
+            redirect("/unauthorized");
         }
     }
 
