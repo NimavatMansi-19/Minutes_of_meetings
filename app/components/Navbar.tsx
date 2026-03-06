@@ -12,8 +12,10 @@ import {
     LogOut,
     LogIn,
     ClipboardList,
-    Command
+    Command,
+    User
 } from 'lucide-react';
+import NotificationBell from './NotificationBell';
 
 export default function Navbar() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,6 +40,7 @@ export default function Navbar() {
 
     const navLinks = [
         { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, show: isLoggedIn },
+        { href: "/profile", label: "Profile", icon: User, show: isLoggedIn },
         { href: "/staff", label: "Staff", icon: Users, show: isLoggedIn && (role === 'admin' || role === 'meeting_convener') },
         { href: "/meetingmember", label: "Members", icon: UserPlus, show: isLoggedIn && (role === 'admin' || role === 'meeting_convener') },
         { href: "/meetings", label: "Meetings", icon: Calendar, show: isLoggedIn },
@@ -51,9 +54,9 @@ export default function Navbar() {
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-2xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-[72px]">
-                    <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-4 xl:gap-10">
                         {/* Branding */}
-                        <Link href="/dashboard" className="flex items-center gap-2.5 group">
+                        <Link href="/dashboard" className="flex items-center gap-2.5 group shrink-0">
                             <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 w-8 h-8 rounded-lg shadow-md border border-indigo-500/10 flex items-center justify-center group-hover:scale-[1.03] transition-transform duration-300">
                                 <Command size={18} className="text-white" />
                             </div>
@@ -82,17 +85,18 @@ export default function Navbar() {
                         )}
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
                         {isLoggedIn ? (
-                            <div className="flex items-center gap-3">
-                                <div className="hidden sm:flex flex-col items-end px-3 py-1 bg-transparent">
+                            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                                {isLoggedIn && <NotificationBell />}
+                                <div className="hidden lg:flex flex-col items-end px-3 py-1 bg-transparent">
                                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Role</span>
                                     <span className="text-sm font-bold text-gray-800 leading-none capitalize">{role?.replace('_', ' ') || 'User'}</span>
                                 </div>
-                                <div className="h-6 w-px bg-slate-200 hidden sm:block mx-1"></div>
+                                <div className="h-6 w-px bg-slate-200 hidden lg:block mx-1"></div>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center gap-1.5 hover:bg-amber-50 text-gray-600 hover:text-amber-700 transition-colors px-3 py-1.5 rounded-lg text-sm font-semibold"
+                                    className="flex items-center gap-1.5 hover:bg-amber-50 text-gray-600 hover:text-amber-700 transition-colors px-3 py-1.5 rounded-lg text-sm font-semibold shrink-0"
                                 >
                                     <LogOut size={16} strokeWidth={2.5} />
                                     <span className="hidden sm:inline">Logout</span>

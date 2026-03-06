@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
+import { notifyMeetingMembers } from "./notifications";
 
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -75,6 +76,8 @@ export async function updateMeeting(formData: FormData) {
         },
         data: updateData,
     });
+
+    await notifyMeetingMembers(id, `Meeting PRO-${id} has been updated.`);
 
     redirect("/meetings");
 }

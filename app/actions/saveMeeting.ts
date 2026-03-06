@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
+import { notifyAllStaff } from "./notifications";
 
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
@@ -45,7 +46,7 @@ export async function saveMeeting(formData: FormData) {
         }
     }
 
-    await prisma.meetings.create({
+    const newMeeting = await prisma.meetings.create({
         data: {
             MeetingDate: new Date(MeetingDate),
             MeetingTypeID: Number(MeetingTypeID),
@@ -56,6 +57,8 @@ export async function saveMeeting(formData: FormData) {
             Modified: new Date(),
         },
     });
+
+    await notifyAllStaff(`A new meeting PRO-${newMeeting.MeetingID} has been scheduled for ${new Date(MeetingDate).toLocaleDateString()}.`);
 
     redirect("/meetings");
 }

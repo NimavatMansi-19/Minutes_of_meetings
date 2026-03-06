@@ -4,15 +4,44 @@ import PageHeader from "../../components/PageHeader";
 import Section from "../../components/Section";
 import Card from "../../components/Card";
 import { Calendar, Clock, FileText, Link as LinkIcon, FileEdit, AlertCircle, CheckCircle, Info } from "lucide-react";
+import MeetingMinutesClient from "./MeetingMinutesClient";
+import MeetingAgendaClient from "./MeetingAgendaClient";
+import { requireUser } from "@/lib/session";
 
 async function DetailMeeting({ params }: { params: Promise<{ MeetingID: string }> }) {
     const { MeetingID } = await params;
+
+    const session = await requireUser();
+    const canEdit = session.role === 'admin' || session.role === 'meeting_convener';
+
     const data = await prisma.meetings.findFirst({
         where: { MeetingID: Number(MeetingID) },
         include: {
-            meetingtype: true
+            meetingtype: true,
+            meetingminutes: true,
+            meetingagenda: {
+                orderBy: {
+                    OrderSeq: 'asc'
+                }
+            },
+            minuteshistory: {
+                orderBy: {
+                    Created: 'desc'
+                }
+            }
         }
     });
+
+    const staffs = await prisma.staff.findMany({ select: { StaffID: true, StaffName: true } });
+    const staffMap = new Map(staffs.map(s => [s.StaffID, s.StaffName]));
+
+    const mappedHistory = data?.minuteshistory.map((h: any) => ({
+        HistoryID: h.HistoryID,
+        Content: h.Content,
+        Created: h.Created,
+        EditedBy: h.EditedBy,
+        EditorName: staffMap.get(h.EditedBy) || "Unknown User"
+    })) || [];
 
     if (!data) {
         return (
@@ -145,6 +174,21 @@ async function DetailMeeting({ params }: { params: Promise<{ MeetingID: string }
                                 </div>
                             </div>
                         </Card>
+
+                        {/* Meeting Agenda */}
+                        <MeetingAgendaClient
+                            meetingID={data.MeetingID}
+                            agendas={data.meetingagenda || []}
+                            canEdit={canEdit}
+                        />
+
+                        {/* Meeting Minutes */}
+                        <MeetingMinutesClient
+                            meetingID={data.MeetingID}
+                            initialNotes={data.meetingminutes[0]?.Notes || null}
+                            historyLogs={mappedHistory}
+                            canEdit={canEdit}
+                        />
                     </div>
                 </div>
             </Section>

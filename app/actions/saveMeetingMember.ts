@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/session";
+import { createNotification } from "./notifications";
 
 export async function saveMeetingMember(formData: FormData) {
     const user = await getCurrentUser();
@@ -41,6 +42,8 @@ export async function saveMeetingMember(formData: FormData) {
             IsPresent: IsPresent,
         },
     });
+
+    await createNotification(Number(StaffID), `You have been assigned to Meeting PRO-${MeetingID}.`);
 
     redirect("/meetingmember");
 }

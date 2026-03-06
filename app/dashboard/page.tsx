@@ -16,7 +16,9 @@ import {
     Sparkles,
     User,
     Mail,
-    Phone
+    Phone,
+    Bell,
+    BarChart3
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -44,7 +46,7 @@ export default async function DashboardPage() {
                             Dashboard
                         </h1>
                         <p className="text-lg text-gray-700 max-w-2xl font-medium mt-4">
-                            Welcome back, <span className="text-black capitalize font-semibold">{role.replace('_', ' ')}</span>.
+                            Welcome back, <span className="text-black capitalize font-semibold">{(role || 'staff').replace('_', ' ')}</span>.
                             Monitor organization activities and manage your meetings securely matching enterprise standards.
                         </p>
                     </div>
@@ -254,6 +256,30 @@ export default async function DashboardPage() {
                                         <ChevronRight size={18} className="text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all duration-300" />
                                     </Link>
                                 )}
+
+                                {isAdminOrConvener && (
+                                    <Link href="/notifications/add" className="flex items-center justify-between group p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all duration-300">
+                                        <div className="flex items-center gap-4 text-gray-800 group-hover:text-black">
+                                            <div className="text-rose-500 group-hover:scale-110 transition-transform duration-300">
+                                                <Bell size={22} />
+                                            </div>
+                                            <span className="font-semibold text-sm tracking-wide">Send Alert</span>
+                                        </div>
+                                        <ChevronRight size={18} className="text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all duration-300" />
+                                    </Link>
+                                )}
+                                {isAdminOrConvener && (
+                                    <Link href="/reports/attendance" className="flex items-center justify-between group p-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-100 hover:border-slate-300 transition-all duration-300">
+                                        <div className="flex items-center gap-4 text-gray-800 group-hover:text-black">
+                                            <div className="text-emerald-500 group-hover:scale-110 transition-transform duration-300">
+                                                <BarChart3 size={22} />
+                                            </div>
+                                            <span className="font-semibold text-sm tracking-wide">Attendance Report</span>
+                                        </div>
+                                        <ChevronRight size={18} className="text-black/20 group-hover:text-black group-hover:translate-x-1 transition-all duration-300" />
+                                    </Link>
+                                )}
+
                             </div>
 
                             <div className="mt-8 p-5 rounded-[1.25rem] bg-indigo-50 border border-indigo-100 relative z-10 shadow-inner">
