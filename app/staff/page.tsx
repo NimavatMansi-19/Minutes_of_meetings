@@ -1,5 +1,5 @@
 import React from "react";
-import { prisma } from "../../lib/Prisma";
+import { prisma } from "../../lib/prisma";
 import { staff } from "../generated/prisma/browser";
 import Link from "next/link";
 import deleteStaff from "../actions/DeleteStaff";

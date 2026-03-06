@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { prisma } from "../../lib/Prisma";
+import { prisma } from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/session";
 

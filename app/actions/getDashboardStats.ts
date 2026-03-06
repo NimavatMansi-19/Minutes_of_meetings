@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/Prisma";
+import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 
 export async function getDashboardStats() {

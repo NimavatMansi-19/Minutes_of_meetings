@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "./Prisma";
+import { prisma } from "./prisma";
 
 export async function getCurrentUser() {
     const cookieStore = await cookies();

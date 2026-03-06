@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/Prisma";
+import { prisma } from "@/lib/prisma";
 import React from "react";
 import { updateMeetingMember } from "@/app/actions/updateMeetingMember";
 import PageHeader from "@/app/components/PageHeader";

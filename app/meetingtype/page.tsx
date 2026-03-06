@@ -1,7 +1,7 @@
 import { requireUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
-import { prisma } from "../../lib/Prisma";
+import { prisma } from "../../lib/prisma";
 import Link from "next/link";
 import deleteMeetingType from "../actions/deleteMeetingType";
 import DeleteUserBtn from "../ui/DeleteUserBtn";

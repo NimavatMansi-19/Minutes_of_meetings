@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/Prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function debugAuth() {
     const cookieStore = await cookies();

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/Prisma';
+import { prisma } from '@/lib/prisma';
 import React from 'react'
 import EditStaffAction from '@/app/actions/EditStaff';
 import PageHeader from '@/app/components/PageHeader';

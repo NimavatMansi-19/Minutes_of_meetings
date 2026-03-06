@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/Prisma";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import React from "react";
 import PageHeader from "@/app/components/PageHeader";

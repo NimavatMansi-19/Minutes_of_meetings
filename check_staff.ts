@@ -1,4 +1,4 @@
-import { prisma } from "./lib/Prisma";
+import { prisma } from "./lib/prisma";
 
 async function listStaff() {
     try {
